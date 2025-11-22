@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Reporte</title>
+    <style>
+        body {
+            font-family: Courier, monospace;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .cabecera {
+            text-align: center;
+        }
+        .money {
+            text-align: left;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h4 class="cabecera">
+        {nombre_empresa}<br>
+        Nit: {nit_empresa}<br>
+        Iva Régimen Común<br>
+        Arqueo de caja<br>
+        {fecha}
+    </h4>
+    <p>=============================</p>
+    <h4>Vendedor: {vendedor}</h4>
+    <p>=============================</p>
+
+    <table>
+        <tr>
+            <th>Forma de pago</th>
+            <th>Valor</th>
+        </tr>
+        {{detalles}}
+    </table>
+    <p>=============================</p>
+    <h5 class="money">Gastos Diarios: {gastos}</h5>
+    <h5 class="money">Base Diaria: {base}</h5>
+    <p>=============================</p>
+    <h4 class="money">Neto: {neto}</h4>
+    <p>=============================</p>
+</body>
+</html>

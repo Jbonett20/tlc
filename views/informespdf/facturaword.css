@@ -1,0 +1,121 @@
+body{
+	font-family: courier;
+	text-transform: uppercase;
+	
+}
+.cabecera2{
+	text-align:center;
+}
+table{
+	width:100%;
+	border-collapse:collapse; 
+}
+
+td{
+	padding: 0;
+}
+
+.productos{
+	text-align: center;
+	/*background:yellow;*/
+	border-left: none;
+	border-bottom: 1px solid;
+	border-top: none;
+	border-right: none;
+}
+tr.desp  {
+	border:1px solid !important;
+
+}
+.tmedia{
+	text-align:center;
+}
+.totales{
+	border:1px solid;
+	margin-top: 5px;
+	/*background: #e9e9e9;*/
+	margin-left: 60%;
+	width: 100%; 
+}
+table.totales tr td{
+	/*background: red;*/
+	text-align: center;
+}
+
+table.totales tr th{
+	/*background: red;*/
+	text-align: left;
+}
+
+tr.neto td{
+	border-top: 1px solid !important;
+	font-size: 20px;
+
+}
+
+tr.neto th{
+	border-top: 1px solid !important;
+	font-size: 20px;
+	
+
+}
+.logo{
+	height: 100px;
+	width: 100px;
+	background-image: url("img/logo.jpeg");
+	background-size: 100%;
+	float: right;
+	border-radius: 50px;
+
+}
+
+table.factura{
+	/*background: #e9e9e9;*/
+	width: 100%;
+}
+table.factura th{
+	text-align: left;
+}
+
+table.factura td{
+	text-align: right;
+}
+tr.ti_fac{
+	border:1px solid;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+
+}
+
+tr.ti_fac th{
+	font-size: 18px;
+	font-weight: bold;
+	border-bottom: 1px solid;
+}
+
+.tablanit{
+	/*background: #e9e9e9;*/
+	width:100%;
+	
+
+}
+table.tablanit tr th{
+	text-align: left;
+
+}
+
+
+.padre{
+	/*background: red;*/
+	width: 100%;
+	margin-bottom: 10px;
+
+}
+.padretd1{
+	width: 40%
+
+}
+.padretd2{
+	width: 60%
+}
