@@ -1,5 +1,6 @@
-# app/operaciones/
-# # Composer
-# /vendor/
-# composer.lock
-# composer.phar
+app/operaciones/conexion.php
+app/operaciones/conexionlocal.php
+# Composer
+/vendor/
+composer.lock
+composer.phar
