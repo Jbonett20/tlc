@@ -583,7 +583,7 @@
 		</thead>
 		<tbody class="tbl-normal">
 			<!-- <tr ng-repeat="listado in filterfacturXfechaRango = (ListaPlanesDados | filter : filtroProductoIngreso)"> -->
-			<tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl | filter: filtroLiistaPl2 | orderBy: '-') | limitTo:25:25*(pageListaPlanesDados-1)">
+			<tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl | filter: filtroLiistaPl2 | orderBy: '-') | limitTo:25:25*(pageListaPlanesDados-1) track by $index">
 				
 				<td>{{listado.codigoCredito}}</td>
 				<td>{{listado.cc_cliente}}</td>
