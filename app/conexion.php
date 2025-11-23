@@ -2,8 +2,8 @@
 
 	$link=0;
 	$db_host="localhost";
-	$db_user="u288390626_lubricantes";
-	$db_contrasena="JaMbs-3013851992%";
+	$db_user="root";
+	$db_contrasena="";
 	$db= "u288390626_lubricantes"; //"ferroami_bd_turing";
 	$link = mysqli_connect($db_host,$db_user,$db_contrasena,$db);
 

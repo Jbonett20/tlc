@@ -3,7 +3,8 @@ date_default_timezone_set('America/Bogota');
 session_start();
 include('../conexion.php');
 extract($_REQUEST);
-ini_set('date.timezone', '-05:00');
+ini_set('date.timezone', 'America/Bogota');
+// ini_set('date.timezone', '-05:00');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -2926,7 +2927,7 @@ if ($variable == "producto") {
 		$unidadCerrada = $datos->unidadCerrada;
 		$fraccion = $datos->fraccion;
 		$idIva = $datos->idIva;
-		$idSeccion = $datos->idSeccion;
+		$idSeccion = isset($datos->idSeccion) ? $datos->idSeccion : 1;
 		$valorProducto = $datos->valorProducto;
 		$valorVentaProducto = $datos->valorVentaProducto;
 		$valorVentaProductoUnidad = $datos->valorVentaProductoUnidad;
@@ -2935,13 +2936,13 @@ if ($variable == "producto") {
 		// $editable=$datos->editable;
 		$CodigoProductoFALSO = -10;
 		// $serial=$datos->serialProducto;
-		if ($idSeccion == "") {
+		if ($idSeccion == "" || $idSeccion == null) {
 			$idSeccion = 1;
 		}
 		$Insert_empresa = mysqli_query($link,"SELECT * FROM tbl_producto WHERE codigo_producto='$CodigoProductoFALSO'");
 
 		if (mysqli_fetch_row($Insert_empresa) > 0) {
-			echo "duplicadoCodigo";
+			echo json_encode(array('success' => false, 'message' => 'El código del producto ya existe'));
 		} else {
 
 
@@ -2950,17 +2951,16 @@ if ($variable == "producto") {
 			$CodigoProducto = $codigo[0] + 1;
 			$Insert_empresa = mysqli_query($link,"INSERT INTO  tbl_producto VALUES(null,'$CodigoProducto','$CodigoBarras',null,null,'$DescripcionProducto','$presentacion','$marca','$idProveedor','$idCategoria','$idIva','$idSeccion','$unidadCerrada','$fraccion','$valorProducto','$valorVentaProducto','$valorVentaProductoUnidad','$renta','$stockMin')");
 			if (!$Insert_empresa) {
-				echo "fallo";
+				echo json_encode(array('success' => false, 'message' => 'Error al insertar el producto'));
 			} else {
 				$sql_ultimoproducto = mysqli_query($link,"SELECT * FROM tbl_producto ORDER by id_producto DESC limit 1 ");
 				$filaproducto = mysqli_fetch_array($sql_ultimoproducto);
 				$id_producto = $filaproducto['id_producto'];
 				$Insertar_inventario = mysqli_query($link,"INSERT INTO tbl_inventario VALUES(null,'$id_producto',0,0,0,0,current_date())");
 				if (!$Insertar_inventario) {
-					echo "fallo2";
+					echo json_encode(array('success' => false, 'message' => 'Error al crear el inventario del producto'));
 				} else {
-
-					echo "exito";
+					echo json_encode(array('success' => true, 'message' => 'Producto creado exitosamente', 'idProducto' => $id_producto, 'codigoProducto' => $CodigoProducto));
 				}
 			}
 		}

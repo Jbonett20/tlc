@@ -318,7 +318,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div class="row" ng-if="vistaCredito==false">
+                                            <!-- <div class="row" ng-if="vistaCredito==false">
                                                 <div ng-if="ContraDescuentroBotonFacturar==1" align="center" class="col-md-12">
                                                     <button type="button" class="btn btn-primary btn-lg btn-block " ng-click="creditoAddDatos()">
                                                         <i class="material-icons">play_for_work</i> Credito
@@ -331,7 +331,7 @@
                                                         <i class="material-icons">play_for_work</i> Credito
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </th>
                                     </tr>
                                 </thead>
@@ -1093,7 +1093,7 @@
                                 </thead>
                                 <tbody class="tbl-normal">
                                     <!-- <tr ng-repeat="listado in filterfacturXfechaRango = (ListaPlanesDados | filter : filtroProductoIngreso)"> -->
-                                    <tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl | filter: filtroLiistaPl2 |  orderBy:'-') | limitTo:10:10*(pageListaPlanesDados-1)">
+                                    <tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl | filter: filtroLiistaPl2 |  orderBy:'-') | limitTo:10:10*(pageListaPlanesDados-1) track by $index">
                                         <td>
                                             <div class="card-avatar" align="center">
                                                 <!-- <a href="#pablo"> -->

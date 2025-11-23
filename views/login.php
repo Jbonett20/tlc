@@ -4,9 +4,6 @@
 
 ?>
 <link rel="stylesheet" href="css/login.css">
-<script>
-	document.getElementById("user").focus();
-</script>
 <div class="signupform">
   <div class="container">
     <!-- main content -->
@@ -41,6 +38,16 @@
   </div>
  
 </div>
+
+<script>
+	// Esperar a que el DOM esté listo antes de hacer focus
+	setTimeout(function() {
+		var userInput = document.getElementById("user");
+		if (userInput) {
+			userInput.focus();
+		}
+	}, 100);
+</script>
 
 	<!-- <div class="container">
     <div class="col-lg-4 col-md-6 col-sm-6 ml-auto mr-auto">

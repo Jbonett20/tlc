@@ -496,7 +496,7 @@
 		</thead>
 		<tbody class="tbl-normal">
 			<!-- <tr ng-repeat="listado in filterfacturXfechaRango = (ListaPlanesDados | filter : filtroProductoIngreso)"> -->
-			<tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl) | limitTo:25:25*(pageListaPlanesDados-1)">
+			<tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl) | limitTo:25:25*(pageListaPlanesDados-1) track by $index">
 				
 				<td>{{listado.cc_cliente}}</td>
 				<td>{{listado.nombre_cliente}}</td>
