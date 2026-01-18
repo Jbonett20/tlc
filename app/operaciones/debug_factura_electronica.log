@@ -1,0 +1,676 @@
+
+=== Nueva petición: 2025-11-22 16:21:59 ===
+ID Factura: 5717
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5717'
+Número de productos encontrados: 0
+
+=== Nueva petición: 2025-11-22 16:29:05 ===
+ID Factura: 5719
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5719'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 16:31:39 ===
+ID Factura: 5720
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5720'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 16:33:37 ===
+ID Factura: 5721
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5721'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 16:35:42 ===
+ID Factura: 5722
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5722'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-22 17:57:49 ===
+ID Factura: 5731
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5731'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-22 18:24:39 ===
+ID Factura: 5733
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5733'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 18:26:05 ===
+ID Factura: 5734
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5734'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 18:46:18 ===
+ID Factura: 5735
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5735'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-22 18:47:47 ===
+ID Factura: 5736
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5736'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 08:52:04 ===
+ID Factura: 5834
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5834'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 09:41:38 ===
+ID Factura: 5840
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5840'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 11:40:31 ===
+ID Factura: 5854
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5854'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 11:48:45 ===
+ID Factura: 5856
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5856'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 12:02:22 ===
+ID Factura: 5857
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5857'
+Número de productos encontrados: 3
+
+=== Nueva petición: 2025-11-24 12:03:10 ===
+ID Factura: 5858
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5858'
+Número de productos encontrados: 3
+
+=== Nueva petición: 2025-11-24 12:12:46 ===
+ID Factura: 5860
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5860'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 12:57:57 ===
+ID Factura: 5865
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5865'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 13:22:18 ===
+ID Factura: 5866
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5866'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 13:23:37 ===
+ID Factura: 5867
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5867'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 13:24:59 ===
+ID Factura: 5868
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5868'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 14:10:40 ===
+ID Factura: 5876
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5876'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 14:29:06 ===
+ID Factura: 5877
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5877'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 14:39:35 ===
+ID Factura: 5879
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5879'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-24 15:12:31 ===
+ID Factura: 5887
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5887'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-24 16:18:14 ===
+ID Factura: 5895
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5895'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 16:23:51 ===
+ID Factura: 5898
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5898'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 17:04:27 ===
+ID Factura: 5905
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5905'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-24 17:29:54 ===
+ID Factura: 5909
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5909'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-24 17:41:11 ===
+ID Factura: 5911
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5911'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 08:12:07 ===
+ID Factura: 5918
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5918'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 08:17:54 ===
+ID Factura: 5919
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5919'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-25 08:53:08 ===
+ID Factura: 5923
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5923'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 09:14:04 ===
+ID Factura: 5925
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5925'
+Número de productos encontrados: 3
+
+=== Nueva petición: 2025-11-25 09:25:26 ===
+ID Factura: 5927
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5927'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-25 09:26:45 ===
+ID Factura: 5928
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5928'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 09:53:56 ===
+ID Factura: 5931
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5931'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 10:18:31 ===
+ID Factura: 5934
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5934'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 10:26:38 ===
+ID Factura: 5937
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5937'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 10:49:13 ===
+ID Factura: 5943
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5943'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 12:00:39 ===
+ID Factura: 5957
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5957'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 13:15:12 ===
+ID Factura: 5960
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5960'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 13:20:51 ===
+ID Factura: 5961
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5961'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 14:50:45 ===
+ID Factura: 5972
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5972'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 14:58:13 ===
+ID Factura: 5974
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5974'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 16:08:42 ===
+ID Factura: 5984
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5984'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 16:32:18 ===
+ID Factura: 5985
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='5985'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 17:13:45 ===
+ID Factura: 6001
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6001'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-25 17:35:48 ===
+ID Factura: 6007
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6007'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-26 08:51:33 ===
+ID Factura: 6019
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6019'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-26 09:02:42 ===
+ID Factura: 6021
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6021'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-26 10:44:55 ===
+ID Factura: 6041
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6041'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-26 11:25:38 ===
+ID Factura: 6047
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6047'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-26 13:37:13 ===
+ID Factura: 6062
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6062'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-26 13:46:14 ===
+ID Factura: 6064
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6064'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-26 14:29:17 ===
+ID Factura: 6068
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6068'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-27 10:54:32 ===
+ID Factura: 6128
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6128'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-27 11:24:40 ===
+ID Factura: 6134
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6134'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-27 14:02:42 ===
+ID Factura: 6148
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6148'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-27 15:24:13 ===
+ID Factura: 6160
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6160'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-28 11:09:31 ===
+ID Factura: 6232
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6232'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-28 11:50:13 ===
+ID Factura: 6236
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6236'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-28 11:54:28 ===
+ID Factura: 6237
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6237'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-28 11:54:51 ===
+ID Factura: 6238
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6238'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-28 11:55:26 ===
+ID Factura: 6239
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6239'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-11-29 08:16:49 ===
+ID Factura: 6289
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6289'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-29 08:54:24 ===
+ID Factura: 6297
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6297'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-11-29 09:33:17 ===
+ID Factura: 6304
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6304'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-03 12:20:08 ===
+ID Factura: 6824
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='6824'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-11 12:02:52 ===
+ID Factura: 7503
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7503'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-12-11 12:03:06 ===
+ID Factura: 7504
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7504'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2025-12-11 12:19:56 ===
+ID Factura: 7507
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7507'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-11 13:52:34 ===
+ID Factura: 7521
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7521'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-11 13:53:53 ===
+ID Factura: 7523
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7523'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-12 08:26:02 ===
+ID Factura: 7567
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7567'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-15 17:34:28 ===
+ID Factura: 7973
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='7973'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-20 08:07:09 ===
+ID Factura: 8288
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='8288'
+Número de productos encontrados: 3
+
+=== Nueva petición: 2025-12-27 15:50:43 ===
+ID Factura: 8881
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='8881'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2025-12-28 10:01:20 ===
+ID Factura: 8951
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='8951'
+Número de productos encontrados: 3
+
+=== Nueva petición: 2026-01-02 13:51:03 ===
+ID Factura: 9284
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9284'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 10:22:50 ===
+ID Factura: 9375
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9375'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 10:50:52 ===
+ID Factura: 9381
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9381'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 10:51:07 ===
+ID Factura: 9382
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9382'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 10:55:11 ===
+ID Factura: 9383
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9383'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 10:57:16 ===
+ID Factura: 9385
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9385'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 11:01:24 ===
+ID Factura: 9386
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9386'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-03 16:34:49 ===
+ID Factura: 9447
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9447'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-04 07:10:06 ===
+ID Factura: 9462
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9462'
+Número de productos encontrados: 2
+
+=== Nueva petición: 2026-01-04 07:11:17 ===
+ID Factura: 9464
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9464'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-04 12:19:57 ===
+ID Factura: 9490
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9490'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-04 12:25:42 ===
+ID Factura: 9492
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9492'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 07:04:56 ===
+ID Factura: 9494
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9494'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 09:52:40 ===
+ID Factura: 9520
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9520'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 09:53:05 ===
+ID Factura: 9521
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9521'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 09:53:59 ===
+ID Factura: 9522
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9522'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 09:54:12 ===
+ID Factura: 9523
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9523'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 15:51:45 ===
+ID Factura: 9602
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9602'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 16:17:03 ===
+ID Factura: 9608
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9608'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-05 16:18:08 ===
+ID Factura: 9609
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9609'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-06 18:08:36 ===
+ID Factura: 9757
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9757'
+Número de productos encontrados: 2
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-08 10:50:12 ===
+ID Factura: 9929
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9929'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-08 10:51:30 ===
+ID Factura: 9930
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9930'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-08 11:33:00 ===
+ID Factura: 9943
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='9943'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-09 10:11:12 ===
+ID Factura: 10025
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10025'
+Número de productos encontrados: 4
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-09 10:23:59 ===
+ID Factura: 10028
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10028'
+Número de productos encontrados: 1
+
+=== Nueva petición: 2026-01-09 13:02:54 ===
+ID Factura: 10062
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10062'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-09 13:03:23 ===
+ID Factura: 10063
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10063'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-10 07:30:00 ===
+ID Factura: 10111
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10111'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-15 10:00:41 ===
+ID Factura: 10494
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10494'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 502
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 502
+
+=== Nueva petición: 2026-01-15 10:21:20 ===
+ID Factura: 10500
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10500'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-15 10:37:49 ===
+ID Factura: 10503
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10503'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-15 11:27:51 ===
+ID Factura: 10512
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10512'
+Número de productos encontrados: 2
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-15 13:30:44 ===
+ID Factura: 10533
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10533'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-15 15:28:53 ===
+ID Factura: 10561
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10561'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-16 11:15:50 ===
+ID Factura: 10601
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10601'
+Número de productos encontrados: 2
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500
+
+=== Nueva petición: 2026-01-17 08:38:53 ===
+ID Factura: 10640
+SQL Query: SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='10640'
+Número de productos encontrados: 1
+Intento envio DIAN #1
+HTTP Code DIAN intento 1: 500
+Intento envio DIAN #2
+HTTP Code DIAN intento 2: 500
+Intento envio DIAN #3
+HTTP Code DIAN intento 3: 500

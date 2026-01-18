@@ -1,0 +1,12 @@
+{
+    "require-dev": {
+        "psalm/phar": "^5.26",
+        "phpstan/phpstan": "^1.12"
+    },
+    "require": {
+        "psr/log": "^3.0",
+        "composer/semver": "^3.4",
+        "mpdf/mpdf": "^6.1",
+        "monolog/monolog": "^3.7"
+    }
+}

@@ -1,0 +1,98 @@
+[19-Dec-2024 14:06:58 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFactura.php on line 161
+[19-Dec-2024 14:07:29 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFactura.php on line 161
+[19-Dec-2024 14:14:27 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 25
+[19-Dec-2024 14:14:27 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 340
+[19-Dec-2024 14:15:04 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 25
+[19-Dec-2024 14:15:04 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 340
+[20-Dec-2024 09:20:17 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneral.php on line 22
+[20-Dec-2024 09:20:17 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneral.php on line 319
+[20-Dec-2024 09:21:01 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 25
+[20-Dec-2024 09:21:01 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCajaDetalle.php on line 340
+[20-Dec-2024 09:21:09 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 25
+[20-Dec-2024 09:21:09 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 322
+[20-Dec-2024 09:21:14 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaHoyCaja.php on line 24
+[20-Dec-2024 09:21:14 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaHoyCaja.php on line 323
+[20-Dec-2024 09:21:24 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 25
+[20-Dec-2024 09:21:24 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 322
+[20-Dec-2024 09:21:32 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 25
+[20-Dec-2024 09:21:32 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 322
+[20-Dec-2024 09:24:28 America/Bogota] PHP Warning:  Undefined variable $variable_html in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 25
+[20-Dec-2024 09:24:28 America/Bogota] PHP Warning:  Undefined variable $titulo in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 322
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
+[20-Dec-2024 09:26:52 America/Bogota] PHP Warning:  Undefined array key "descuento" in /home/marialej/public_html/views/informespdf/BaseFacturaGeneralCaja.php on line 94
