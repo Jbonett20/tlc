@@ -2009,6 +2009,194 @@
     </uib-tab>
     <uib-tab index="4">
         <uib-tab-heading>
+            <i class="material-icons">assessment</i>
+            Reporte Facturas
+        </uib-tab-heading>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-info" ng-class="{'btn-fill': reporteSeleccionado === 'normales'}" ng-click="cargarReporteFacturasNormales()">
+                        <i class="material-icons">description</i> Facturas Normales
+                    </button>
+                    <button class="btn btn-info" ng-class="{'btn-fill': reporteSeleccionado === 'electronicas'}" ng-click="cargarReporteFacturasElectronicas()">
+                        <i class="material-icons">description</i> Facturas Electrónicas
+                    </button>
+                    <button class="btn btn-success" ng-if="reporteSeleccionado == 'normales'" ng-click="exportarExcel('normales')">
+                        <i class="material-icons">file_download</i> Descargar Excel
+                    </button>
+                    <button class="btn btn-success" ng-if="reporteSeleccionado == 'electronicas'" ng-click="exportarExcel('electronicas')">
+                        <i class="material-icons">file_download</i> Descargar Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 15px;" ng-if="reporteSeleccionado">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="material-icons">search</i></span>
+                    <input type="text" class="form-control" placeholder="Buscar por código, cliente, CC o tipo de pago" ng-model="searchReporte">
+                </div>
+            </div>
+        </div>
+        <!-- TABLA REPORTE FACTURAS NORMALES -->
+        <div class="row" ng-if="reporteSeleccionado == 'normales'" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-rose card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">description</i>
+                        </div>
+                        <h3 class="card-title">Reporte de Facturas Normales 
+                            <small ng-if="totalReportesNormales > 0">
+                                ({{totalReportesNormales}} resultados)
+                            </small>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><strong>ID</strong></th>
+                                        <th><strong>Código</strong></th>
+                                        <th><strong>Fecha</strong></th>
+                                        <th><strong>Cliente</strong></th>
+                                        <th><strong>CC Cliente</strong></th>
+                                        <th><strong>Valor Pago</strong></th>
+                                        <th><strong>Descuento</strong></th>
+                                        <th><strong>Ganancia</strong></th>
+                                        <th><strong>Tipo Pago</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="factura in itemsReporteNormales">
+                                        <td>{{factura.id_factura}}</td>
+                                        <td><strong>{{factura.codigo_factura}}</strong></td>
+                                        <td>{{factura.fecha_factura}} {{factura.hora}}</td>
+                                        <td>{{factura.nombre_cliente}}</td>
+                                        <td>{{factura.cc_cliente}}</td>
+                                        <td>${{factura.valor_pago | number:0}}</td>
+                                        <td>${{factura.descuento | number:0}}</td>
+                                        <td>${{factura.ganacia | number:0}}</td>
+                                        <td><span class="label label-info">{{factura.tipoPago}}</span></td>
+                                    </tr>
+                                    <tr ng-if="itemsReporteNormales.length === 0">
+                                        <td colspan="9" class="text-center text-muted"><em>No hay resultados para esta búsqueda</em></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" ng-if="totalReportesNormales > 0" style="margin-top: 30px;">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaNormales(1)" ng-disabled="pageReporteNormales == 1">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">first_page</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaNormales(pageReporteNormales - 1)" ng-disabled="pageReporteNormales == 1">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">navigate_before</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" disabled style="cursor: default;">
+                                            Página <strong>{{pageReporteNormales}}</strong> de <strong>{{maxPaginasNormales}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaNormales(pageReporteNormales + 1)" ng-disabled="pageReporteNormales >= maxPaginasNormales">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">navigate_next</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaNormales(maxPaginasNormales)" ng-disabled="pageReporteNormales >= maxPaginasNormales">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">last_page</i>
+                                        </button>
+                                    </div>
+                                    <p style="margin-top: 15px; color: #999; font-size: 12px;">
+                                        Mostrando {{itemsReporteNormales.length}} de {{totalReportesNormales}} registros
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- TABLA REPORTE FACTURAS ELECTRÓNICAS -->
+        <div class="row" ng-if="reporteSeleccionado == 'electronicas'" style="margin-top: 20px;">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">description</i>
+                        </div>
+                        <h3 class="card-title">Reporte de Facturas Electrónicas 
+                            <small ng-if="totalReportesElectronicas > 0">
+                                ({{totalReportesElectronicas}} resultados)
+                            </small>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><strong>ID</strong></th>
+                                        <th><strong>Código</strong></th>
+                                        <th><strong>Fecha</strong></th>
+                                        <th><strong>Cliente</strong></th>
+                                        <th><strong>CC Cliente</strong></th>
+                                        <th><strong>Valor Pago</strong></th>
+                                        <th><strong>Descuento</strong></th>
+                                        <th><strong>Ganancia</strong></th>
+                                        <th><strong>Tipo Pago</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="factura in itemsReporteElectronicas">
+                                        <td>{{factura.id_factura}}</td>
+                                        <td><strong>{{factura.codigo_factura}}</strong></td>
+                                        <td>{{factura.fecha_factura}} {{factura.hora}}</td>
+                                        <td>{{factura.nombre_cliente}}</td>
+                                        <td>{{factura.cc_cliente}}</td>
+                                        <td>${{factura.valor_pago | number:0}}</td>
+                                        <td>${{factura.descuento | number:0}}</td>
+                                        <td>${{factura.ganacia | number:0}}</td>
+                                        <td><span class="label label-warning">{{factura.tipoPago}}</span></td>
+                                    </tr>
+                                    <tr ng-if="itemsReporteElectronicas.length === 0">
+                                        <td colspan="9" class="text-center text-muted"><em>No hay resultados para esta búsqueda</em></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row" ng-if="totalReportesElectronicas > 0" style="margin-top: 30px;">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaElectronicas(1)" ng-disabled="pageReporteElectronicas == 1">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">first_page</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaElectronicas(pageReporteElectronicas - 1)" ng-disabled="pageReporteElectronicas == 1">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">navigate_before</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" disabled style="cursor: default;">
+                                            Página <strong>{{pageReporteElectronicas}}</strong> de <strong>{{maxPaginasElectronicas}}</strong>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaElectronicas(pageReporteElectronicas + 1)" ng-disabled="pageReporteElectronicas >= maxPaginasElectronicas">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">navigate_next</i>
+                                        </button>
+                                        <button type="button" class="btn btn-default" ng-click="cargarPaginaElectronicas(maxPaginasElectronicas)" ng-disabled="pageReporteElectronicas >= maxPaginasElectronicas">
+                                            <i class="material-icons" style="font-size: 16px; vertical-align: middle;">last_page</i>
+                                        </button>
+                                    </div>
+                                    <p style="margin-top: 15px; color: #999; font-size: 12px;">
+                                        Mostrando {{itemsReporteElectronicas.length}} de {{totalReportesElectronicas}} registros
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    <uib-tab index="5">
+        <uib-tab-heading>
             <i class="material-icons">format_list_bulleted</i>
             Listado Por Periodo
         </uib-tab-heading>

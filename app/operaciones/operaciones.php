@@ -1208,24 +1208,24 @@ if ($variable == 'ingresos') {
 		$sql_detallefactura = mysqli_query($link,"UPDATE tbl_inventario SET Unidad='$Unidad', stock='$stock',diferenciaU='$diferenciaU', diferenciaF='$diferenciaF',fecha_movimiento='$fechaHoy' WHERE id_inventario='$id_inventario'");
 		$cabeceras = "Content-type: text/html\r\n";
 		$mensaje = '
-<html>
-<head>
-  <title>Informacion de Productos modificados en Inventario</title>
-</head>
-<body>
-  <p>¡Estos son los productos modificados!</p>
-  <table>
-    <tr>
-      <th>Producto</th><th>Cantidad</th><th>Diferencia</th><th>hora</th>
-    </tr>
-    <tr>
-      <td>' . $producto . '</td><td>' . $Unidad . '/' . $stock . '</td><td>' . $diferenciaU . '/' . $diferenciaF . '</td><td>' . $hora . '</td>
-    </tr>
-   
-  </table>
-</body>
-</html>
-';
+					<html>
+					<head>
+					<title>Informacion de Productos modificados en Inventario</title>
+					</head>
+					<body>
+					<p>¡Estos son los productos modificados!</p>
+					<table>
+						<tr>
+						<th>Producto</th><th>Cantidad</th><th>Diferencia</th><th>hora</th>
+						</tr>
+						<tr>
+						<td>' . $producto . '</td><td>' . $Unidad . '/' . $stock . '</td><td>' . $diferenciaU . '/' . $diferenciaF . '</td><td>' . $hora . '</td>
+						</tr>
+					
+					</table>
+					</body>
+					</html>
+					';
 		$bool = mail('betsygomez2507@gmail.com', 'Modificacion de Inventario', $mensaje, $cabeceras);
 		if ($bool) {
 			echo "Mensaje enviado";
@@ -1999,24 +1999,24 @@ if ($variable == 'ingresos') {
 			$producto = $array['descripcion'] . ' ' . $array['presentacion'];
 			$cabeceras = "Content-type: text/html\r\n";
 			$mensaje = '
-<html>
-<head>
-  <title>Informacion de Productos modificados en Inventario</title>
-</head>
-<body>
-  <p>¡Estos son los productos modificados!</p>
-  <table>
-    <tr>
-      <th>Producto</th><th>Cantidad</th><th>Diferencia</th><th>hora</th>
-    </tr>
-    <tr>
-      <td>' . $producto . '</td><td>' . $cantidadUnidad . '/' . $cantidadFraccion . '</td><td>' . $hora . '</td>
-    </tr>
-   
-  </table>
-</body>
-</html>
-';
+			<html>
+			<head>
+			<title>Informacion de Productos modificados en Inventario</title>
+			</head>
+			<body>
+			<p>¡Estos son los productos modificados!</p>
+			<table>
+				<tr>
+				<th>Producto</th><th>Cantidad</th><th>Diferencia</th><th>hora</th>
+				</tr>
+				<tr>
+				<td>' . $producto . '</td><td>' . $cantidadUnidad . '/' . $cantidadFraccion . '</td><td>' . $hora . '</td>
+				</tr>
+			
+			</table>
+			</body>
+			</html>
+			';
 			$bool = mail('betsygomez2507@gmail.com', 'Modificacion de Inventario', $mensaje, $cabeceras);
 			if ($bool) {
 				echo "Mensaje enviado";
@@ -2460,6 +2460,168 @@ if ($variable == 'ingresos') {
 		}
 
 		echo $rows = json_encode($rows);
+		mysqli_close($link);
+	}
+	else if ($operacion == 'reporteFacturasNormales') {
+		// Recibir parámetros del cliente
+		$requestBody = file_get_contents("php://input");
+		$params = json_decode($requestBody, true);
+		
+		$page = isset($params['page']) ? intval($params['page']) : 1;
+		$search = isset($params['search']) ? $params['search'] : '';
+		$limit = isset($params['limit']) ? intval($params['limit']) : 25;
+		
+		if ($page < 1) $page = 1;
+		if ($limit < 1) $limit = 25;
+		
+		$offset = ($page - 1) * $limit;
+		
+		// Construir WHERE con búsqueda
+		$where = "f.tipo_factura = 1";
+		if (!empty($search)) {
+			$search_safe = mysqli_real_escape_string($link, $search);
+			$where .= " AND (f.codigo_factura LIKE '%$search_safe%' 
+						OR c.nombre_cliente LIKE '%$search_safe%' 
+						OR c.cc_cliente LIKE '%$search_safe%' 
+						OR f.tipoPago LIKE '%$search_safe%')";
+		}
+		
+		// Obtener total de registros
+		$sql_count = mysqli_query($link, 
+			"SELECT COUNT(*) as total FROM tbl_factura f 
+			 LEFT JOIN tbl_cliente c ON f.id_cliente = c.id_cliente 
+			 WHERE $where"
+		);
+		$count_row = mysqli_fetch_array($sql_count);
+		$total = $count_row['total'];
+		
+		// Obtener datos paginados
+		$sql_facturas_normales = mysqli_query($link, 
+			"SELECT f.id_factura, f.codigo_factura, f.id_empresa, f.fecha_factura, f.hora, 
+					f.id_cliente, f.valor_pago, f.pagoCambio, f.cambio, f.descuento, 
+					f.ganacia, f.id_vendedor, f.tipoPago, f.tipo_factura,
+					c.cc_cliente, c.nombre_cliente, c.direccion, c.telefono
+			 FROM tbl_factura f 
+			 LEFT JOIN tbl_cliente c ON f.id_cliente = c.id_cliente 
+			 WHERE $where
+			 ORDER BY f.fecha_factura DESC, f.hora DESC
+			 LIMIT $limit OFFSET $offset"
+		);
+		
+		$rows = [];
+		while ($row = mysqli_fetch_array($sql_facturas_normales)) {
+			$rows[] = [
+				'id_factura' => $row['id_factura'],
+				'codigo_factura' => $row['codigo_factura'],
+				'id_empresa' => $row['id_empresa'],
+				'fecha_factura' => $row['fecha_factura'],
+				'hora' => $row['hora'],
+				'id_cliente' => $row['id_cliente'],
+				'valor_pago' => $row['valor_pago'],
+				'pagoCambio' => $row['pagoCambio'],
+				'cambio' => $row['cambio'],
+				'descuento' => $row['descuento'],
+				'ganacia' => $row['ganacia'],
+				'id_vendedor' => $row['id_vendedor'],
+				'tipoPago' => $row['tipoPago'],
+				'tipo_factura' => $row['tipo_factura'],
+				'cc_cliente' => $row['cc_cliente'],
+				'nombre_cliente' => $row['nombre_cliente'],
+				'direccion' => $row['direccion'],
+				'telefono' => $row['telefono']
+			];
+		}
+		
+		error_log("Reporte normales - Página: $page, Búsqueda: '$search', Total: $total, Retornando: " . count($rows));
+		
+		header('Content-Type: application/json');
+		echo json_encode([
+			'data' => $rows,
+			'total' => $total,
+			'page' => $page,
+			'limit' => $limit
+		]);
+		mysqli_close($link);
+
+	} else if ($operacion == 'reporteFacturasElectronicas') {
+		// Recibir parámetros del cliente
+		$requestBody = file_get_contents("php://input");
+		$params = json_decode($requestBody, true);
+		
+		$page = isset($params['page']) ? intval($params['page']) : 1;
+		$search = isset($params['search']) ? $params['search'] : '';
+		$limit = isset($params['limit']) ? intval($params['limit']) : 25;
+		
+		if ($page < 1) $page = 1;
+		if ($limit < 1) $limit = 25;
+		
+		$offset = ($page - 1) * $limit;
+		
+		// Construir WHERE con búsqueda
+		$where = "f.tipo_factura = 2";
+		if (!empty($search)) {
+			$search_safe = mysqli_real_escape_string($link, $search);
+			$where .= " AND (f.codigo_factura LIKE '%$search_safe%' 
+						OR c.nombre_cliente LIKE '%$search_safe%' 
+						OR c.cc_cliente LIKE '%$search_safe%' 
+						OR f.tipoPago LIKE '%$search_safe%')";
+		}
+		
+		// Obtener total de registros
+		$sql_count = mysqli_query($link, 
+			"SELECT COUNT(*) as total FROM tbl_factura f 
+			 LEFT JOIN tbl_cliente c ON f.id_cliente = c.id_cliente 
+			 WHERE $where"
+		);
+		$count_row = mysqli_fetch_array($sql_count);
+		$total = $count_row['total'];
+		
+		// Obtener datos paginados
+		$sql_facturas_electronicas = mysqli_query($link, 
+			"SELECT f.id_factura, f.codigo_factura, f.id_empresa, f.fecha_factura, f.hora, 
+					f.id_cliente, f.valor_pago, f.pagoCambio, f.cambio, f.descuento, 
+					f.ganacia, f.id_vendedor, f.tipoPago, f.tipo_factura,
+					c.cc_cliente, c.nombre_cliente, c.direccion, c.telefono
+			 FROM tbl_factura f 
+			 LEFT JOIN tbl_cliente c ON f.id_cliente = c.id_cliente 
+			 WHERE $where
+			 ORDER BY f.fecha_factura DESC, f.hora DESC
+			 LIMIT $limit OFFSET $offset"
+		);
+		
+		$rows = [];
+		while ($row = mysqli_fetch_array($sql_facturas_electronicas)) {
+			$rows[] = [
+				'id_factura' => $row['id_factura'],
+				'codigo_factura' => $row['codigo_factura'],
+				'id_empresa' => $row['id_empresa'],
+				'fecha_factura' => $row['fecha_factura'],
+				'hora' => $row['hora'],
+				'id_cliente' => $row['id_cliente'],
+				'valor_pago' => $row['valor_pago'],
+				'pagoCambio' => $row['pagoCambio'],
+				'cambio' => $row['cambio'],
+				'descuento' => $row['descuento'],
+				'ganacia' => $row['ganacia'],
+				'id_vendedor' => $row['id_vendedor'],
+				'tipoPago' => $row['tipoPago'],
+				'tipo_factura' => $row['tipo_factura'],
+				'cc_cliente' => $row['cc_cliente'],
+				'nombre_cliente' => $row['nombre_cliente'],
+				'direccion' => $row['direccion'],
+				'telefono' => $row['telefono']
+			];
+		}
+		
+		error_log("Reporte electronicas - Página: $page, Búsqueda: '$search', Total: $total, Retornando: " . count($rows));
+		
+		header('Content-Type: application/json');
+		echo json_encode([
+			'data' => $rows,
+			'total' => $total,
+			'page' => $page,
+			'limit' => $limit
+		]);
 		mysqli_close($link);
 	}
 } else if ($variable == 'inventario') {
@@ -4195,5 +4357,5 @@ else if ($variable == "credito") {
 				mysqli_close($link);
 			}
 		}
-	}
+	} 
 }
