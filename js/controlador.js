@@ -4805,7 +4805,8 @@ $scope.cambioFacturaDinero={
 	ValorAumento:0,
 	fechaInicio:new Date(),
 	fechaFinal:sumarDias(fechaYa, +10),
-	tipoPago:"EFECTIVO"
+	tipoPago:"EFECTIVO",
+	tipo_factura:'1' // Por defecto factura normal
 
 }
 $scope.creditoAddDatos=function(){
@@ -5376,7 +5377,22 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 		
 		var pagoFactura=parseInt(cambioFacturaDinero.Pagocambio);
 		
-		$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=insertarfactura",
+		// Determinar el tipo de factura (default es 1 si no está especificado)
+		$scope.tipo_factura_actual = cambioFacturaDinero.tipo_factura ? parseInt(cambioFacturaDinero.tipo_factura) : 1;
+		
+		console.log('🔍 DEBUG - cambioFacturaDinero.tipo_factura:', cambioFacturaDinero.tipo_factura);
+		console.log('🔍 DEBUG - tipo_factura_actual:', $scope.tipo_factura_actual);
+		
+		// Seleccionar la operación según el tipo de factura
+		var operacion = ($scope.tipo_factura_actual == 2) ? 'insertarfacturaElectronica' : 'insertarfactura';
+		
+		console.log('🔍 DEBUG - operacion seleccionada:', operacion);
+		console.log('🔍 DEBUG - datos a enviar:', {
+			id_cliente: insertClientes.id_cliente,
+			tipo_factura: $scope.tipo_factura_actual
+		});
+		
+		$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=" + operacion,
 		{
 			'id_cliente':insertClientes.id_cliente,
 			'totalpago':$scope.totalapagar,
@@ -5384,7 +5400,8 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 			'pagoCambio':cambioFacturaDinero.Pagocambio,
 			'cambio':cambioFacturaDinero.cambio,
 			'descuento':cambioFacturaDinero.descuento,
-			'tipopago':cambioFacturaDinero.tipoPago
+			'tipopago':cambioFacturaDinero.tipoPago,
+			'tipo_factura':$scope.tipo_factura_actual
 
 		})
 		.success(function (datos)
@@ -5551,8 +5568,11 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 		if ($scope.listaProductosDetalleFactura!="" && cambioFacturaDinero.cambio>=0 ) {
 		
 			var pagoFactura=parseInt(cambioFacturaDinero.Pagocambio);
+
+			// Forzar tipo de factura electrónica (2)
+			$scope.tipo_factura_actual = 2;
 			
-			$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=insertarfactura",
+			$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=insertarfacturaElectronica",
 			{
 				'id_cliente':insertClientes.id_cliente,
 				'totalpago':$scope.totalapagar,
@@ -5560,7 +5580,8 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 				'pagoCambio':cambioFacturaDinero.Pagocambio,
 				'cambio':cambioFacturaDinero.cambio,
 				'descuento':cambioFacturaDinero.descuento,
-				'tipopago':cambioFacturaDinero.tipoPago
+				'tipopago':cambioFacturaDinero.tipoPago,
+				'tipo_factura':$scope.tipo_factura_actual
 
 			})
 			.success(function (datos)
@@ -5634,63 +5655,65 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 					console.log('Advertencia: popup bloqueado o no permitido por el navegador.');
 				}
 
-				// Esperar 3 segundos para que se inserten todos los productos antes de llamar a la API
-				setTimeout(function() {
-					console.log('Llamando a Movimientoapi después de esperar productos...');
-					$http.post("app/operaciones/Movimientoapi.php", {
-						"idFact": id_factura
-					}).success(function (resMovimiento) {
-						console.log('RESPUESTA COMPLETA DIAN:', resMovimiento);
-						
-						// Verificar formato nuevo con success flag
-						if (resMovimiento.success === true) {
-							console.log('ÉXITO - Factura electrónica creada');
-							new PNotify({
-								title: '¡Éxito!',
-								text: resMovimiento.message || 'Factura electrónica creada exitosamente',
-								type: 'success',
-								styling: 'bootstrap3'
-							});
+				// SOLO LLAMAR A MOVIMIENTOAPI SI ES FACTURA ELECTRÓNICA (tipo_factura = 2)
+				if ($scope.tipo_factura_actual == 2) {
+					// Esperar 3 segundos para que se inserten todos los productos antes de llamar a la API
+					setTimeout(function() {
+						console.log('Llamando a Movimientoapi después de esperar productos...');
+						$http.post("app/operaciones/Movimientoapi.php", {
+							"idFact": id_factura
+						}).success(function (resMovimiento) {
+							console.log('RESPUESTA COMPLETA DIAN:', resMovimiento);
 							
-							// Si existe QR y CUFE en la respuesta
-							if (resMovimiento.data && resMovimiento.data.movimiento && resMovimiento.data.movimiento.faencmovi) {
-								const qrUrl = resMovimiento.data.movimiento.faencmovi.qr;
-								const cufe = resMovimiento.data.movimiento.faencmovi.cufe;
+							// Verificar formato nuevo con success flag
+							if (resMovimiento.success === true) {
+								console.log('ÉXITO - Factura electrónica creada');
+								new PNotify({
+									title: '¡Éxito!',
+									text: resMovimiento.message || 'Factura electrónica creada exitosamente',
+									type: 'success',
+									styling: 'bootstrap3'
+								});
+								
+								// Si existe QR y CUFE en la respuesta
+								if (resMovimiento.data && resMovimiento.data.movimiento && resMovimiento.data.movimiento.faencmovi) {
+									const qrUrl = resMovimiento.data.movimiento.faencmovi.qr;
+									const cufe = resMovimiento.data.movimiento.faencmovi.cufe;
+									if (ventanaFactura && !ventanaFactura.closed) {
+										ventanaFactura.location = 'views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl);
+									} else {
+										window.open('views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl), '_blank');
+									}
+								} else {
+									if (ventanaFactura && !ventanaFactura.closed) {
+										ventanaFactura.location = 'views/informespdf/BaseFactura.php?factura=' + id_factura;
+									} else {
+										window.open('views/informespdf/BaseFactura.php?factura=' + id_factura, '_blank');
+									}
+								}
+							}
+							// Verificar formato antiguo con codigo
+							else if (resMovimiento.codigo === "200") {
+								const qrUrl = resMovimiento.movimiento.faencmovi.qr;
+								const cufe = resMovimiento.movimiento.faencmovi.cufe;
 								if (ventanaFactura && !ventanaFactura.closed) {
 									ventanaFactura.location = 'views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl);
 								} else {
 									window.open('views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl), '_blank');
 								}
-							} else {
-								if (ventanaFactura && !ventanaFactura.closed) {
-									ventanaFactura.location = 'views/informespdf/BaseFactura.php?factura=' + id_factura;
-								} else {
-									window.open('views/informespdf/BaseFactura.php?factura=' + id_factura, '_blank');
+							}
+							// Error en la respuesta
+							else {
+								var errorMsg = 'No se pudo emitir la factura a la DIAN';
+								if (resMovimiento.message) {
+									errorMsg = resMovimiento.message;
 								}
-							}
-						}
-						// Verificar formato antiguo con codigo
-						else if (resMovimiento.codigo === "200") {
-							const qrUrl = resMovimiento.movimiento.faencmovi.qr;
-							const cufe = resMovimiento.movimiento.faencmovi.cufe;
-							if (ventanaFactura && !ventanaFactura.closed) {
-								ventanaFactura.location = 'views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl);
-							} else {
-								window.open('views/informespdf/BaseFactura.php?factura=' + id_factura + '&cufe=' + cufe + '&qr=' + encodeURIComponent(qrUrl), '_blank');
-							}
-						}
-						// Error en la respuesta
-						else {
-							var errorMsg = 'No se pudo emitir la factura a la DIAN';
-							if (resMovimiento.message) {
-								errorMsg = resMovimiento.message;
-							}
-							if (resMovimiento.errorDetails) {
-								console.log('Detalles error:', resMovimiento.errorDetails);
-								errorMsg += '\n' + resMovimiento.errorDetails;
-							}
-							
-							new PNotify({
+								if (resMovimiento.errorDetails) {
+									console.log('Detalles error:', resMovimiento.errorDetails);
+									errorMsg += '\n' + resMovimiento.errorDetails;
+								}
+								
+								new PNotify({
 								title: 'Error DIAN',
 								text: errorMsg,
 								type: 'error',
@@ -5714,7 +5737,12 @@ $scope.EliminarTotalFacturaSelect=function(id_ingresofactura){
 						});
 					});
 				}, 3000); // Esperar 3 segundos
-					console.log(id_factura);
+			} else {
+				// Factura normal: no llamar a Movimientoapi, solo mostrar el PDF
+				console.log('Factura normal - no se enviará a DIAN');
+			}
+			
+			console.log(id_factura);
 				
 				$scope.listaProductosDetalleFactura=[];
 					// for (var k = 0; k < $scope.listaProductosDetalleFactura.length; k++)

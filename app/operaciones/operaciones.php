@@ -15,10 +15,11 @@ mysqli_query($link,"SET time_zone = '-05:00'");
 if ($variable == 'ingresos') {
 	if ($operacion == "UpdateNombreFacturaSelect") {
 
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$nombre = $datos->nombre;
-		$id = $datos->id;
+		$nombre = $datos['nombre'];
+		$id = $datos['id'];
 		$sql_actualizarFacturaNombre = mysqli_query($link,"UPDATfE tbl_ingresofactura SET nombre_factura ='$nombre' WHERE id_ingresofactura='$id'");
 		if (!$sql_actualizarFacturaNombre) {
 			echo "fallo";
@@ -27,7 +28,8 @@ if ($variable == 'ingresos') {
 			echo "exito";
 		}
 	}else if($operacion == "eliminarfechacaducidad"){
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 		$sql_eliminar= mysqli_query($link,"DELETE FROM tbl_fechacaducidaddetalle WHERE id_fechaCaducidadDetalle='$datos'" );
 		if(!$sql_eliminar){
 			echo "fallo";
@@ -36,13 +38,14 @@ if ($variable == 'ingresos') {
 			
 		}
 	}  else if ($operacion == "fechaCaducidadDetalle") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$lote = $datos->lote;
-		$referencia = $datos->referencia;
-		$cantidad = $datos->cantidad;
-		$fechaCaducidad = $datos->fechaCaducidad;
-		$id_fechacaducidad = $datos->id_fechacaducidad;
+		$lote = $datos['lote'];
+		$referencia = $datos['referencia'];
+		$cantidad = $datos['cantidad'];
+		$fechaCaducidad = $datos['fechaCaducidad'];
+		$id_fechacaducidad = $datos['id_fechacaducidad'];
 
 		$sql_insertingresos = mysqli_query($link,"INSERT INTO tbl_fechacaducidaddetalle VALUES (NULL, '$id_fechacaducidad','$lote','$referencia','$cantidad','$fechaCaducidad')");
 		if (!$sql_insertingresos) {
@@ -71,10 +74,11 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'OperacionesRangoFactura') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$rangoFacturaInicial = $datos->rangoFacturaInicial;
-		$rangoFacturaFinal = $datos->rangoFacturaFinal;
+		$rangoFacturaInicial = $datos['rangoFacturaInicial'];
+		$rangoFacturaFinal = $datos['rangoFacturaFinal'];
 		$sql_busqueda = mysqli_query($link,"SELECT * FROM tbl_rangofactura");
 
 		if (mysqli_num_rows($sql_busqueda) == 0) {
@@ -109,7 +113,8 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "fechaCaducidadDetalleListaID") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 		
 		$id = $datos;
 
@@ -124,9 +129,10 @@ if ($variable == 'ingresos') {
 		mysqli_close($link);
 	} else if ($operacion == "fechaCaducidad") {
 
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
+		$id_producto = $datos['id_producto'];
 
 		$sql_busqueda = mysqli_query($link,"SELECT * FROM tbl_fechacaducidad WHERE id_producto='$id_producto' ");
 		$respuesta = mysqli_num_rows($sql_busqueda);
@@ -156,16 +162,17 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "insertadorIngresos") {
-		$datos = json_decode(file_get_contents("php://input"));
-		if (!isset($datos->id_facturaD)) {
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		if (!isset($datos['id_facturaD'])) {
 			$id_facturaD = 0;
 		} else {
-			$id_facturaD = $datos->id_facturaD;
+			$id_facturaD = $datos['id_facturaD'];
 		}
 
-		$id_producto = $datos->id_producto;
-		$cantidadUnidad = $datos->cantidadUnidad;
-		$cantidadFraccion = $datos->cantidadFraccion;
+		$id_producto = $datos['id_producto'];
+		$cantidadUnidad = $datos['cantidadUnidad'];
+		$cantidadFraccion = $datos['cantidadFraccion'];
 
 
 		$sql_busquedaInventarios = mysqli_query($link,"SELECT * FROM tbl_inventario WHERE id_producto='$id_producto' ");
@@ -231,12 +238,13 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "insertarIngresoFactura") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidadU = $datos->cantidadU;
-		$cantidadF = $datos->cantidadF;
-		$id_ingresoFac = $datos->id_ingresoFac;
+		$id_producto = $datos['id_producto'];
+		$cantidadU = $datos['cantidadU'];
+		$cantidadF = $datos['cantidadF'];
+		$id_ingresoFac = $datos['id_ingresoFac'];
 
 		$sql_verificar = mysqli_query($link,"SELECT * FROM tbl_ingresosdetallefactura WHERE id_ingresofactura='$id_ingresoFac' and id_producto='$id_producto'");
 		$respuesta = mysqli_num_rows($sql_verificar);
@@ -262,12 +270,13 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "cierreInv") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$VTotal = $datos->VTotal;
-		$vVenta = $datos->vVenta;
-		$unidadN = $datos->unidadN;
-		$stockN = $datos->stockN;
+		$VTotal = $datos['VTotal'];
+		$vVenta = $datos['vVenta'];
+		$unidadN = $datos['unidadN'];
+		$stockN = $datos['stockN'];
 		$utilidad = $vVenta - $VTotal;
 
 
@@ -280,12 +289,13 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "changeIngresoFactura") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidadU = $datos->cantidadU;
-		$cantidadF = $datos->cantidadF;
-		$id_ingresoFac = $datos->id_ingresoFac;
+		$id_producto = $datos['id_producto'];
+		$cantidadU = $datos['cantidadU'];
+		$cantidadF = $datos['cantidadF'];
+		$id_ingresoFac = $datos['id_ingresoFac'];
 
 
 		$sql_listadoProducto = mysqli_query($link,"UPDATE tbl_ingresosdetallefactura SET cantidadUnidad='$cantidadU', cantidadFraccion='$cantidadF' WHERE id_ingresofactura='$id_ingresoFac' and id_producto='$id_producto'");
@@ -296,13 +306,14 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "changeIngresoFacturaValor") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$valor_d = $datos->valor_d;
-		$valor_ve = $datos->valor_ve;
-		$valor_Un = $datos->valor_Un;
-		$id_ingresoFac = $datos->id_ingresoFac;
+		$id_producto = $datos['id_producto'];
+		$valor_d = $datos['valor_d'];
+		$valor_ve = $datos['valor_ve'];
+		$valor_Un = $datos['valor_Un'];
+		$id_ingresoFac = $datos['id_ingresoFac'];
 
 		$rentabilidad = (($valor_ve - $valor_d) / $valor_ve) * 100;
 		$sql_listadoProducto = mysqli_query($link,"UPDATE tbl_producto SET valor='$valor_d', valor_venta='$valor_ve', valor_unidad='$valor_Un',rentabilidad='$rentabilidad' WHERE  id_producto='$id_producto'");
@@ -313,10 +324,11 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "addbarraProducto") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$barra = $datos->barra;
+		$id_producto = $datos['id_producto'];
+		$barra = $datos['barra'];
 
 		$sql_verificar = mysqli_query($link,"SELECT * FROM tbl_producto WHERE  id_producto='$id_producto'");
 		if (mysqli_num_rows($sql_verificar) > 0) {
@@ -341,9 +353,10 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "listadodeSelectFactura") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_ingresofactura = $datos->id_ingresofactura;
+		$id_ingresofactura = $datos['id_ingresofactura'];
 
 		$sql_listadoProducto = mysqli_query($link,"SELECT * FROM tbl_ingresosdetallefactura idf, tbl_ingresofactura ifa, tbl_producto p,tbl_iva i WHERE ifa.id_ingresofactura=idf.id_ingresofactura and i.id_iva=p.id_iva and idf.id_producto=p.id_producto and ifa.id_ingresofactura='$id_ingresofactura' ORDER BY idf.id_ingresosAdd DESC");
 
@@ -356,10 +369,11 @@ if ($variable == 'ingresos') {
 		mysqli_close($link);
 	}
 	if ($operacion == "listadodeOperacionInventario") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_cierreI = $datos->id_cierreI;
-		$id_cierreF = $datos->id_cierreF;
+		$id_cierreI = $datos['id_cierreI'];
+		$id_cierreF = $datos['id_cierreF'];
 
 		$sql_listadoCierreI = mysqli_query($link,"SELECT fecha_Cierre FROM tbl_cierreInventario WHERE id_cierreInventario='$id_cierreI'");
 		$dataCI = mysqli_fetch_array($sql_listadoCierreI);
@@ -390,9 +404,10 @@ if ($variable == 'ingresos') {
 		mysqli_close($link);
 	}
 	if ($operacion == "movimientodelProducto") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
+		$id_producto = $datos['id_producto'];
 
 		$sql_listadoProductoI = mysqli_query($link,"SELECT  i.id_ingresos as codigoD, i.operacion,i.cantidad,i.cantidadFraccion,i.fecha FROM tbl_producto p, tbl_ingresos i WHERE p.id_producto=i.id_producto  and p.id_producto='$id_producto 'ORDER BY i.fecha  DESC  ");
 		$sql_listadoProductoDC = mysqli_query($link,"SELECT c.codigoCredito as codigoD, dc.operacion,dc.cantidad,dc.cantidadFraccion,dc.fecha  FROM tbl_producto p, tbl_detalle_credito dc,tbl_credito c WHERE p.id_producto=dc.id_producto and c.id_credito=dc.id_credito and p.id_producto='$id_producto' ORDER BY dc.fecha DESC  ");
@@ -421,9 +436,10 @@ if ($variable == 'ingresos') {
 		mysqli_close($link);
 	}
 	if ($operacion == "vaciarProductoFacturaSelect") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_ingresosAdd = $datos->id_ingresosAdd;
+		$id_ingresosAdd = $datos['id_ingresosAdd'];
 
 		$sql_listadoProducto = mysqli_query($link,"UPDATE tbl_ingresosdetallefactura SET cantidadUnidad=0, cantidadFraccion=0 WHERE id_ingresofactura='$id_ingresosAdd'");
 
@@ -434,9 +450,10 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "eliminarProductoFacturaSelect") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_ingresosAdd = $datos->id_ingresosAdd;
+		$id_ingresosAdd = $datos['id_ingresosAdd'];
 
 		$sql_listadoProducto = mysqli_query($link,"DELETE FROM  tbl_ingresosdetallefactura  WHERE id_ingresofactura='$id_ingresosAdd'");
 
@@ -447,9 +464,10 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "eliminartotalProductoFacturaSelect") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_ingresosAdd = $datos->id_ingresosAdd;
+		$id_ingresosAdd = $datos['id_ingresosAdd'];
 
 		$sql_listadoProducto = mysqli_query($link,"DELETE FROM  tbl_ingresofactura  WHERE id_ingresofactura='$id_ingresosAdd'");
 		$sql_listadoProducto = mysqli_query($link,"DELETE FROM  tbl_ingresosdetallefactura  WHERE id_ingresofactura='$id_ingresosAdd'");
@@ -462,10 +480,11 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "EliminarIngresoFactura") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$id_ingresoFac = $datos->id_ingresoFac;
+		$id_producto = $datos['id_producto'];
+		$id_ingresoFac = $datos['id_ingresoFac'];
 
 		$sql_listadoProducto = mysqli_query($link,"DELETE FROM tbl_ingresosdetallefactura  WHERE id_ingresofactura='$id_ingresoFac' and id_producto='$id_producto'");
 		if (!$sql_listadoProducto) {
@@ -475,9 +494,10 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "EliminarcaducidadFactura") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id = $datos->id;
+		$id = $datos['id'];
 
 		$sql_listadoProducto = mysqli_query($link,"DELETE FROM tbl_fechacaducidaddetalle  WHERE id_fechaCaducidadDetalle='$id'");
 		if (!$sql_listadoProducto) {
@@ -493,11 +513,12 @@ if ($variable == 'ingresos') {
 		}
 	}
 	if ($operacion == "insertadorIngresosProducto") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidadUnidad = $datos->cantidadUnidad;
-		$cantidadFraccion = $datos->cantidadFraccion;
+		$id_producto = $datos['id_producto'];
+		$cantidadUnidad = $datos['cantidadUnidad'];
+		$cantidadFraccion = $datos['cantidadFraccion'];
 
 
 		$sql_busquedaInventarios = mysqli_query($link,"SELECT * FROM tbl_inventario WHERE id_producto='$id_producto' ");
@@ -558,10 +579,11 @@ if ($variable == 'ingresos') {
 			echo "noseencontro";
 		}
 	} else if ($operacion == "insertadorIngresosProductoSerial") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$serial = $datos->serial;
+		$id_producto = $datos['id_producto'];
+		$serial = $datos['serial'];
 
 		$sql_insertingresos = mysqli_query($link,"INSERT INTO tbl_productoserial VALUES (NULL, '$id_producto', '$serial', current_date())");
 		if (!$sql_insertingresos) {
@@ -571,9 +593,10 @@ if ($variable == 'ingresos') {
 			echo "guardo";
 		}
 	} else if ($operacion == "insertarfacturaAdd") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$nombreAddFactura = $datos->nombreAddFactura;
+		$nombreAddFactura = $datos['nombreAddFactura'];
 
 		// $sql_insertingresos = mysqli_query($link,"INSERT INTO tbl_ingresofactura VALUES (NULL, '$nombreAddFactura',current_date(),0,0,0,0,0)");
 		$sql_insertingresos = mysqli_query($link,"INSERT INTO tbl_ingresofactura VALUES (NULL, '$nombreAddFactura',current_date(),0)");
@@ -584,33 +607,34 @@ if ($variable == 'ingresos') {
 			echo "guardo";
 		}
 	} else if ($operacion == "actualizandoIngresos") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$cantidad = $datos->cantidad;
-		$cantidad_nueva = $datos->cantidad_nueva;
-		$id_producto = $datos->id_producto;
-		$id_inventario = $datos->id_inventario;
-		$id_ingresos = $datos->id_ingresos;
+		$cantidad = $datos['cantidad'];
+		$cantidad_nueva = $datos['cantidad_nueva'];
+		$id_producto = $datos['id_producto'];
+		$id_inventario = $datos['id_inventario'];
+		$id_ingresos = $datos['id_ingresos'];
 
-		$sql_buscaringresiInventario = mysqli_query($link,"SELECT * FROM tbl_inventario  WHERE id_inventario='" . $datos->id_inventario . "'");
+		$sql_buscaringresiInventario = mysqli_query($link,"SELECT * FROM tbl_inventario  WHERE id_inventario='" . $datos['id_inventario'] . "'");
 		$fila = mysqli_fetch_array($sql_buscaringresiInventario);
 
 		$sql_cantidad = $fila['stock'];
-		$resultado = $sql_cantidad - $datos->cantidad;
+		$resultado = $sql_cantidad - $datos['cantidad'];
 
 		// le restamos la cantidad que tenia anteriormente el registro del producto en el inventario
-		$sql_elimnaringresos = mysqli_query($link,"UPDATE tbl_inventario SET stock='$resultado' WHERE id_inventario='" . $datos->id_inventario . "'");
+		$sql_elimnaringresos = mysqli_query($link,"UPDATE tbl_inventario SET stock='$resultado' WHERE id_inventario='" . $datos['id_inventario'] . "'");
 		if (!$sql_elimnaringresos) {
 			echo "noActuaizo_elimno_resta";
 		} else {
 			$nuevostock = $resultado + $cantidad_nueva;
 			// actualizamos el stock del producto en el inventario con el nuevo ingreso actualizado
-			$sql_actualiInventario = mysqli_query($link,"UPDATE tbl_inventario SET stock='$nuevostock' WHERE id_inventario='" . $datos->id_inventario . "'");
+			$sql_actualiInventario = mysqli_query($link,"UPDATE tbl_inventario SET stock='$nuevostock' WHERE id_inventario='" . $datos['id_inventario'] . "'");
 			if (!$sql_actualiInventario) {
 				echo "noActuaizo";
 			} else {
 
-				$sql_actualiIngresos = mysqli_query($link,"UPDATE tbl_ingresos SET cantidad='$cantidad_nueva' WHERE id_ingresos='" . $datos->id_ingresos . "'");
+				$sql_actualiIngresos = mysqli_query($link,"UPDATE tbl_ingresos SET cantidad='$cantidad_nueva' WHERE id_ingresos='" . $datos['id_ingresos'] . "'");
 				if (!$sql_actualiIngresos) {
 					echo "noActuaizo";
 				} else {
@@ -629,8 +653,9 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "listadodeProductosOrden") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$barra = $datos->barra;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$barra = $datos['barra'];
 
 		$sql_listadoProducto = mysqli_query($link,"SELECT p.*,p.presentacion,i.Unidad,p.descripcion,p.fraccion,p.unidadCerrada,p.codigo_producto,c.nombre_categoria,i.stock,i.* FROM tbl_producto p,tbl_categoria c, tbl_inventario i WHERE i.id_producto=p.id_producto and p.id_categoria=c.id_categoria and p.descripcion LIKE '%$barra%' ORDER BY p.descripcion ASC ");
 
@@ -654,8 +679,9 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "listadodeproductoUnico") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$codigoPro = $datos->codigoPro;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$codigoPro = $datos['codigoPro'];
 		$sql_listadoProducto = mysqli_query($link,"SELECT  * FROM tbl_producto  WHERE codigo_producto='$codigoPro' ");
 
 
@@ -677,9 +703,10 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "listadodeProductosSeriales") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_pro = $datos->id_producto;
+		$id_pro = $datos['id_producto'];
 		$sql_listadoProducto = mysqli_query($link,"SELECT ps.id_productoserial, ps.serial,c.nombre_categoria,p.id_producto,p.nombre,p.codigo_producto,p.id_categoria,p.descripcion,p.valor,p.valor_venta FROM tbl_producto p, tbl_categoria c,tbl_productoserial ps WHERE p.id_categoria=c.id_categoria and ps.id_producto=p.id_producto and p.id_producto='$id_pro'");
 
 
@@ -702,10 +729,11 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	}else if ($operacion == "eliminaringresos") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_producto_ElimiIngre = $datos->id_producto_ElimiIngre;
-		$cantidad_ElimiIngre = $datos->cantidad_ElimiIngre;
-		$id_ingreso_ElimiIngre = $datos->id_ingreso_ElimiIngre;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_producto_ElimiIngre = $datos['id_producto_ElimiIngre'];
+		$cantidad_ElimiIngre = $datos['cantidad_ElimiIngre'];
+		$id_ingreso_ElimiIngre = $datos['id_ingreso_ElimiIngre'];
 
 		$sql_elimnaringresos = mysqli_query($link,"DELETE FROM tbl_ingresos WHERE id_ingresos='$id_ingreso_ElimiIngre'");
 		if (!$sql_elimnaringresos) {
@@ -729,13 +757,14 @@ if ($variable == 'ingresos') {
 	}
 } else if ($variable == "facturar") {
 	if ($operacion == 'insertarplansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
-		$totalapagar_plansepare = $datos->totalapagar_plansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
+		$totalapagar_plansepare = $datos['totalapagar_plansepare'];
 
-		$fecha_inicioPlansepare = $datos->fecha_inicioPlansepare;
-		$fechaFin_plansepare = $datos->fechaFin_plansepare;
-		$valor_aumento = $datos->valor_aumento;
+		$fecha_inicioPlansepare = $datos['fecha_inicioPlansepare'];
+		$fechaFin_plansepare = $datos['fechaFin_plansepare'];
+		$valor_aumento = $datos['valor_aumento'];
 
 		$sumapago = $valor_aumento + $totalapagar_plansepare;
 
@@ -750,8 +779,9 @@ if ($variable == 'ingresos') {
 			echo $id_plansepare = $filaplansepare['id_plansepare'];
 		}
 	} else if ($operacion == 'busquedaDetallaCuotas_Planes') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
 
 		$sql_lisdetallepagosplansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.estadoproductos,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_plansepare='$id_plansepare' GROUP BY dpl.id_producto");
 
@@ -763,8 +793,9 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaDetalle_Planes') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
 
 		$sql_lisdetallepagosplansepare = mysqli_query($link,"SELECT abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,cl.cc_cliente,cl.nombre_cliente FROM tbl_plansepare pla, tbl_cliente cl, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and  pla.id_plansepare='$id_plansepare'");
 
@@ -777,12 +808,13 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'actualizacionCuotaplansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$cuotaanterior = $datos->cuotaanterior;
-		$id_abonos_plansepare = $datos->id_abonos_plansepare;
-		$id_plansepare = $datos->id_plansepare;
-		$nuevacuota = $datos->nuevacuota;
-		$descuento_abonos = $datos->descuento_abonos;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$cuotaanterior = $datos['cuotaanterior'];
+		$id_abonos_plansepare = $datos['id_abonos_plansepare'];
+		$id_plansepare = $datos['id_plansepare'];
+		$nuevacuota = $datos['nuevacuota'];
+		$descuento_abonos = $datos['descuento_abonos'];
 
 		$descuentoresta = $descuento_abonos + $cuotaanterior;
 		$descuentorestados = $descuentoresta - $nuevacuota;
@@ -799,9 +831,10 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == 'busquedaPlanesPorfechaRango') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$sql_listadoplansepare = mysqli_query($link,"SELECT pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.fecha_inicio>='$fechaInicialPansepare' and pla.fecha_inicio<='$fechaFinalPansepare' GROUP by pla.id_plansepare");
 
@@ -827,10 +860,11 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'eliminado_plansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$estadoproductos = $datos->estadoproductos;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$estadoproductos = $datos['estadoproductos'];
 
 		$sql_BUSCARABONOS = mysqli_query($link,"SELECT * FROM  tbl_abonos_plansepare WHERE id_plansepare='$id_plansepare'");
 		if (mysqli_num_rows($sql_BUSCARABONOS) == 0) {
@@ -952,10 +986,11 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == 'eliminado_planseparexcliente') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$estadoproductos = $datos->estadoproductos;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$estadoproductos = $datos['estadoproductos'];
 
 		$sql_BUSCARABONOS = mysqli_query($link,"SELECT * FROM  tbl_abonos_plansepare WHERE id_plansepare='$id_plansepare'");
 		if (mysqli_num_rows($sql_BUSCARABONOS) == 0) {
@@ -1078,8 +1113,9 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == 'busquedaPlanesPorCliente') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
 
 		$sql_listadoplansepare = mysqli_query($link,"SELECT pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and cl.id_cliente='$id_cliente'  GROUP by pla.id_plansepare");
 
@@ -1106,12 +1142,13 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'insertarDetallePlansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidad = $datos->cantidad;
-		$valorTotal = $datos->valorTotal;
-		$id_plansepare = $datos->id_plansepare;
+		$id_producto = $datos['id_producto'];
+		$cantidad = $datos['cantidad'];
+		$valorTotal = $datos['valorTotal'];
+		$id_plansepare = $datos['id_plansepare'];
 
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detalle_plansepare VALUES (null,'$id_plansepare','$id_producto','$cantidad','$valorTotal')");
 		if (!$sql_detallefactura) {
@@ -1120,13 +1157,14 @@ if ($variable == 'ingresos') {
 			echo "exito";
 		}
 	} else if ($operacion == 'ajusteInventarioU') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
 
-		$Unidad = $datos->Unidad;
-		$fraccion = $datos->fraccion;
-		$stock = $datos->stock;
-		$id_inventario = $datos->id_inventario;
+		$Unidad = $datos['Unidad'];
+		$fraccion = $datos['fraccion'];
+		$stock = $datos['stock'];
+		$id_inventario = $datos['id_inventario'];
 
 		$sql_consulta = mysqli_query($link,"SELECT * FROM tbl_inventario WHERE id_inventario='$id_inventario'");
 		
@@ -1203,13 +1241,14 @@ if ($variable == 'ingresos') {
 
 
 	} else if ($operacion == "generarPagocuotaPlansepare") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$pagocuota_plansepare = $datos->pagocuota_plansepare;
-		$deuda_actual = $datos->deuda_actual;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$pagocuota_plansepare = $datos['pagocuota_plansepare'];
+		$deuda_actual = $datos['deuda_actual'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$deuda = $deuda_actual - $pagocuota_plansepare;
 
@@ -1254,9 +1293,10 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == "entregarProductosPl") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
 
 		$sql_lisadoDetallPlansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.id_producto,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_plansepare='$id_plansepare' GROUP BY dpl.id_producto");
 
@@ -1316,11 +1356,12 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == "entregarProductosPlXrangofecha") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$sql_lisadoDetallPlansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.id_producto,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_plansepare='$id_plansepare' GROUP BY dpl.id_producto");
 
@@ -1357,13 +1398,14 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == "generarPagocuotaPlansepareXclientes") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$pagocuota_plansepare = $datos->pagocuota_plansepare;
-		$deuda_actual = $datos->deuda_actual;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$pagocuota_plansepare = $datos['pagocuota_plansepare'];
+		$deuda_actual = $datos['deuda_actual'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$deuda = $deuda_actual - $pagocuota_plansepare;
 
@@ -1419,8 +1461,9 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "listadodeCanPro") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_seccion = $datos->id_seccion;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_seccion = $datos['id_seccion'];
 		$sql_listadoClientes_factura = mysqli_query($link,"SELECT count(id_producto) as totalPro FROM tbl_producto WHERE id_seccion='$id_seccion'");
 
 
@@ -1432,8 +1475,9 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "listadodeStock") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_producto = $datos->id_producto;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_producto = $datos['id_producto'];
 		$sql_listadoClientes_factura = mysqli_query($link,"SELECT * FROM tbl_inventario WHERE id_producto='$id_producto'");
 
 
@@ -1456,10 +1500,11 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'facturasXrangoFecha') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_fin = $datos->fecha_fin;
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_fin = $datos['fecha_fin'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and  f.fecha_factura>='$fecha_inicio'  and f.fecha_factura<='$fecha_fin'  order by fecha_factura ASC");
 
@@ -1475,9 +1520,10 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'facturasXrangoFechaUnica') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$fecha_inicio = $datos->fecha_inicio;
+		$fecha_inicio = $datos['fecha_inicio'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente  and  f.fecha_factura='$fecha_inicio'  order by fecha_factura ASC");
@@ -1494,10 +1540,11 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'descuadreList') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_fin = $datos->fecha_fin;
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_fin = $datos['fecha_fin'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT inv.*,pro.* FROM tbl_inventario inv,tbl_producto pro WHERE inv.id_producto=pro.id_producto and inv.diferenciaU<0  and inv.fecha_movimiento>'$fecha_inicio' and inv.fecha_movimiento<'$fecha_fin'");
 
@@ -1513,10 +1560,11 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'descuadreListNomodificado') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_fin = $datos->fecha_fin;
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_fin = $datos['fecha_fin'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT inv.*,pro.* FROM tbl_inventario inv,tbl_producto pro WHERE inv.id_producto=pro.id_producto  and inv.fecha_movimiento <'$fecha_inicio' OR inv.fecha_movimiento>'$fecha_fin' ");
 
@@ -1573,9 +1621,10 @@ if ($variable == 'ingresos') {
 		// echo "exito";
 		mysqli_close($link);
 	} else if ($operacion == 'facturacodigo') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$codigo = $datos->codigo;
+		$codigo = $datos['codigo'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and f.codigo_factura='$codigo' order by fecha_factura ASC");
@@ -1647,9 +1696,10 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'devolucionTotal') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente  and  f.fecha_factura>='$fecha_inicio'  and f.fecha_factura<='$fecha_fin'  order by fecha_factura ASC");
@@ -1697,10 +1747,11 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'facturasXclienteseleccionado') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
 
-		$id_cliente = $datos->id_cliente;
+		$id_cliente = $datos['id_cliente'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and f.id_cliente='$id_cliente'");
 
@@ -1716,9 +1767,10 @@ if ($variable == 'ingresos') {
 			mysqli_close($link);
 		}
 	} else if ($operacion == 'busqueda_facturaseleccinada') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.hora,f.ganacia,f.descuento,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente  and  f.id_factura='$id_factura'");
 
@@ -1731,9 +1783,10 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busqueda_devolucionseleccinada') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_devolucion = $datos->id_devolucion;
+		$id_devolucion = $datos['id_devolucion'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT d.id_devolucion,d.codigo_factura,d.fecha_factura,d.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_devolucion d, tbl_empresa em, tbl_cliente cli WHERE d.id_empresa=em.id_empresa and d.id_cliente=cli.id_cliente  and  d.id_devolucion='$id_devolucion'");
 
@@ -1746,9 +1799,10 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busqueda_facturaseleccinadaProyecto') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT fp.id_facturaproyecto,fp.codigo_factura,fp.fecha_factura,fp.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_facturaproyecto fp, tbl_empresa em, tbl_cliente cli WHERE fp.id_empresa=em.id_empresa and fp.id_cliente=cli.id_cliente  and  fp.id_proyecto='$id_factura'");
 
@@ -1761,9 +1815,10 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaDetallefacturaselecionada') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 		$sql_listado_detalle_factura = mysqli_query($link,"SELECT us.*,p.fraccion,p.valor_venta*i.iva/100 as  ivaVal,i.iva,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,p.descripcion,p.presentacion,p.codigo_producto,p.id_categoria,cat.nombre_categoria,df.cantidad,df.total_pago,p.valor_venta, df.cantidadFraccion,df.* FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_producto p, tbl_detallefactura df, tbl_categoria cat,tbl_iva i,tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and df.id_producto=p.id_producto and df.id_factura=f.id_factura and p.id_categoria=cat.id_categoria and i.id_iva=p.id_iva and us.id_usuariosistema=f.id_vendedor and df.id_factura='$id_factura'");
 
@@ -1776,9 +1831,10 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaDetalledevolucionesselecionada') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_devolucion = $datos->id_devolucion;
+		$id_devolucion = $datos['id_devolucion'];
 
 		$sql_listado_detalle_factura = mysqli_query($link,"SELECT dd.hora,p.valor_venta*i.iva/100 as  ivaVal,i.iva,d.id_devolucion,d.codigo_factura,d.fecha_factura,d.valor_pago,cli.cc_cliente,cli.nombre_cliente,p.descripcion,p.presentacion,p.codigo_producto,p.id_categoria,cat.nombre_categoria,dd.cantidad,dd.total_pago,p.valor_venta, dd.cantidadFraccion,dd.*,us.* FROM tbl_usuario_sistema us, tbl_devolucion d, tbl_empresa em, tbl_cliente cli, tbl_producto p, tbl_detalledevoluciones dd, tbl_categoria cat,tbl_iva i WHERE d.id_empresa=em.id_empresa and d.id_cliente=cli.id_cliente and dd.id_producto=p.id_producto and dd.id_devolucion=d.id_devolucion and p.id_categoria=cat.id_categoria and i.id_iva=p.id_iva and dd.id_vendedor=us.id_usuariosistema and dd.id_devolucion='$id_devolucion'");
 
@@ -1792,9 +1848,10 @@ if ($variable == 'ingresos') {
 		mysqli_close($link);
 	} else if ($operacion == "eliminarFactura") {
 
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 		$sql_updateInventarios = mysqli_query($link,"DELETE FROM tbl_factura WHERE id_factura='$id_factura'");
 		if (!$sql_updateInventarios) {
@@ -1803,11 +1860,12 @@ if ($variable == 'ingresos') {
 			echo "elimino";
 		}
 	} else if ($operacion == 'busquedaDetallefacturaselecionadaDevolucion') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
-		$id_detallefactura = $datos->id_detallefactura;
-		$var_codigo_factura = $datos->var_codigo_factura;
+		$id_factura = $datos['id_factura'];
+		$id_detallefactura = $datos['id_detallefactura'];
+		$var_codigo_factura = $datos['var_codigo_factura'];
 
 		$sql_producto = mysqli_query($link,"SELECT * FROM tbl_detallefactura WHERE id_detalleFactura='$id_detallefactura' ");
 		$rows = mysqli_fetch_array($sql_producto);
@@ -1969,9 +2027,10 @@ if ($variable == 'ingresos') {
 			echo "noseencontro";
 		}
 	} else if ($operacion == 'busquedaDetallefacturaselecionadaProyecto') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'];
 
 		$sql_listado_detalle_factura = mysqli_query($link,"SELECT f.id_facturaproyecto,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,p.nombre,p.codigo_producto,p.id_categoria,cat.nombre_categoria,df.cantidad,df.total_pago,p.valor_venta FROM tbl_facturaproyecto f, tbl_empresa em, tbl_cliente cli, tbl_producto p, tbl_detallefacturaproyecto df, tbl_categoria cat WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and df.id_producto=p.id_producto and df.id_facturaproyecto=f.id_facturaproyecto and p.id_categoria=cat.id_categoria and df.id_facturaproyecto='$id_factura'");
 
@@ -1984,14 +2043,35 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'insertarfactura') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
-		$totalpago = $datos->totalpago;
-		$totalganancia = $datos->totalganancia;
-		$cambio = $datos->cambio;
-		$descuento = $datos->descuento;
-		$pagoCambio = $datos->pagoCambio;
-		$tipopago = $datos->tipopago;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true); // Decodificar como array, no como objeto
+		
+		// DEBUG a archivo
+		file_put_contents('/tmp/debug_factura.log', "\n=== insertarfactura ===\n", FILE_APPEND);
+		file_put_contents('/tmp/debug_factura.log', "REQUEST: $requestBody\n", FILE_APPEND);
+		file_put_contents('/tmp/debug_factura.log', "tipo_factura en datos: " . ($datos['tipo_factura'] ?? 'NULL') . "\n", FILE_APPEND);
+		
+		$id_cliente = $datos['id_cliente'] ?? null;
+		$totalpago = $datos['totalpago'] ?? null;
+		$totalganancia = $datos['totalganancia'] ?? null;
+		$cambio = $datos['cambio'] ?? null;
+		$descuento = $datos['descuento'] ?? null;
+		$pagoCambio = $datos['pagoCambio'] ?? null;
+		$tipopago = $datos['tipopago'] ?? null;
+		$tipo_factura = isset($datos['tipo_factura']) ? (int)$datos['tipo_factura'] : 1; // 1=normal, 2=electrónica
+		
+		file_put_contents('/tmp/debug_factura.log', "tipo_factura final: $tipo_factura\n", FILE_APPEND);
+		
+		// Validar que los datos obligatorios no sean null o vacíos
+		if (!$id_cliente || !$totalpago || $totalpago === '' || $id_cliente === '') {
+			http_response_code(400);
+			echo json_encode([
+				"success" => false,
+				"message" => "Error: Datos incompletos. Cliente o Total requerido",
+				"datos_recibidos" => $datos
+			]);
+			exit;
+		}
 
 
 
@@ -1999,51 +2079,177 @@ if ($variable == 'ingresos') {
 		$filaempresa = mysqli_fetch_array($sql_empresa);
 		$id_empresa = $filaempresa['id_empresa'];
 
-		$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura order by id_factura DESC limit 1 ");
+		// Seleccionar el rango según el tipo de factura
+		if ($tipo_factura == 2) {
+			// Factura electrónica: usar rango de tbl_rangofactura_electronica
+			$sql_rangoFac = mysqli_query($link,"SELECT * FROM tbl_rangofactura_electronica order by id_rango DESC limit 1 ");
+		} else {
+			// Factura normal: usar rango de tbl_rangofactura
+			$sql_rangoFac = mysqli_query($link,"SELECT * FROM tbl_rangofactura order by id_rango DESC limit 1 ");
+		}
+		$filaRango = mysqli_fetch_array($sql_rangoFac);
+		
+		// Validar que existe rango
+		if (!$filaRango) {
+			echo "error: No hay rango de factura configurado para tipo_factura=$tipo_factura";
+			exit;
+		}
+
+		// Obtener última factura del mismo tipo
+		if ($tipo_factura == 2) {
+			$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
+		} else {
+			$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=1 ORDER BY id_factura DESC LIMIT 1 ");
+		}
 		$filafactura = mysqli_fetch_array($sql_ultimafactura);
-		$id_factura = $filafactura['id_factura'];
-		$codigo_factura = $filafactura['codigo_factura'];
+		$id_factura = $filafactura ? $filafactura['id_factura'] : null;
+		$codigo_factura = $filafactura ? $filafactura['codigo_factura'] : null;
+		
 		ini_set('date.timezone', 'America/Bogota');
 		$hoy = date("d-m-Y h:i:s");
-		$hora = date(" h:i:s a");
-		$sql_rangoFac = mysqli_query($link,"SELECT * FROM tbl_rangofactura order by id_rango DESC limit 1 ");
-		$filaRango = mysqli_fetch_array($sql_rangoFac);
+		$hora = date("H:i:s");
 		$horaString = (string)$hora;
-		if (mysqli_num_rows($sql_ultimafactura) == 0) {
-
+		
+		if (!$filafactura) {
+			// Primera factura del tipo: usar inicio del rango
 			$codigofactura = $filaRango['InicioFactura'];
 			$idVendedor = (int)$_SESSION['id'];
-			$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago')");
+			
+			echo "<!-- INSERT - codigo: $codigofactura, tipo: $tipo_factura -->";
+			
+			$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago','$tipo_factura')");
 			if (!$sql_elimnaringresos) {
+				echo "<!-- ERROR INSERT: " . mysqli_error($link) . " -->";
 				echo "fallo";
 			} else {
-				// echo "exito";
-				$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura order by id_factura DESC limit 1 ");
+				// Obtener el ID de la factura recién insertada
+				if ($tipo_factura == 2) {
+					$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
+				} else {
+					$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=1 ORDER BY id_factura DESC LIMIT 1 ");
+				}
 				$filafactura = mysqli_fetch_array($sql_ultimafactura);
-				echo $id_factura = $filafactura['id_factura'];
+				$id_factura = $filafactura['id_factura'];
+				
+				file_put_contents('/tmp/debug_factura.log', "INSERT exitoso - id_factura: $id_factura, codigo: $codigofactura, tipo: $tipo_factura\n", FILE_APPEND);
+				
+				echo $id_factura; // Solo retornar el ID numérico
 			}
 		} else {
-			$idVendedor = (int)$_SESSION['id'];
+			// Siguiente factura: incrementar código
 			$codigofactura = $codigo_factura + 1;
+			
+			// Validar que no supere el rango
 			if ($codigofactura > $filaRango['FinalFactura']) {
-				echo "Numero Factura LLena";
+				echo "Numero Factura LLena - Rango desde " . $filaRango['InicioFactura'] . " hasta " . $filaRango['FinalFactura'] . " agotado";
 			} else {
-				$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago')");
+				$idVendedor = (int)$_SESSION['id'];
+				$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago','$tipo_factura')");
 				if (!$sql_elimnaringresos) {
 					echo "fallo";
 				} else {
-					// echo "exito";
-					$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura order by id_factura DESC limit 1 ");
+					// Obtener el ID de la factura recién insertada
+					if ($tipo_factura == 2) {
+						$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
+					} else {
+						$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=1 ORDER BY id_factura DESC LIMIT 1 ");
+					}
+					$filafactura = mysqli_fetch_array($sql_ultimafactura);
+					$id_factura = $filafactura['id_factura'];
+					file_put_contents('/tmp/debug_factura.log', "INSERT exitoso (sig) - id_factura: $id_factura, codigo: $codigofactura\n", FILE_APPEND);
+					echo $id_factura;
+				}
+			}
+		}
+	} else if ($operacion == 'insertarfacturaElectronica') {
+		// Nueva operación para facturas electrónicas (tipo_factura = 2)
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true); // Decodificar como array
+		
+		file_put_contents('/tmp/debug_factura.log', "\n=== insertarfacturaElectronica ===\n", FILE_APPEND);
+		file_put_contents('/tmp/debug_factura.log', "REQUEST: $requestBody\n", FILE_APPEND);
+		
+		$id_cliente = $datos['id_cliente'] ?? null;
+		$totalpago = $datos['totalpago'] ?? null;
+		$totalganancia = $datos['totalganancia'] ?? null;
+		$cambio = $datos['cambio'] ?? null;
+		$descuento = $datos['descuento'] ?? null;
+		$pagoCambio = $datos['pagoCambio'] ?? null;
+		$tipopago = $datos['tipopago'] ?? null;
+		$tipo_factura = 2; // Siempre es factura electrónica
+		
+		// Validar que los datos obligatorios no sean null o vacíos
+		if (!$id_cliente || !$totalpago || $totalpago === '' || $id_cliente === '') {
+			http_response_code(400);
+			echo json_encode([
+				"success" => false,
+				"message" => "Error: Datos incompletos. Cliente o Total requerido",
+				"datos_recibidos" => $datos
+			]);
+			exit;
+		}
+
+		$sql_empresa = mysqli_query($link,"SELECT * FROM tbl_empresa order by id_empresa DESC limit 1 ");
+		$filaempresa = mysqli_fetch_array($sql_empresa);
+		$id_empresa = $filaempresa['id_empresa'];
+
+		// Consultar rango de factura electrónica
+		$sql_rangoFac = mysqli_query($link,"SELECT * FROM tbl_rangofactura_electronica order by id_rango DESC limit 1 ");
+		$filaRango = mysqli_fetch_array($sql_rangoFac);
+		
+		// Validar que existe rango
+		if (!$filaRango) {
+			echo "error: No hay rango de factura electrónica configurado";
+			exit;
+		}
+
+		// Obtener última factura electrónica
+		$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
+		$filafactura = mysqli_fetch_array($sql_ultimafactura);
+		$id_factura = $filafactura ? $filafactura['id_factura'] : null;
+		$codigo_factura = $filafactura ? $filafactura['codigo_factura'] : null;
+		
+		ini_set('date.timezone', 'America/Bogota');
+		$hora = date("H:i:s");
+		$idVendedor = (int)$_SESSION['id'];
+		
+		if (!$filafactura) {
+			// Primera factura electrónica: usar inicio del rango
+			$codigofactura = $filaRango['InicioFactura'];
+			$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago','$tipo_factura')");
+			if (!$sql_elimnaringresos) {
+				echo "fallo";
+			} else {
+				$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
+				$filafactura = mysqli_fetch_array($sql_ultimafactura);
+				$id_factura = $filafactura['id_factura'];
+				file_put_contents('/tmp/debug_factura.log', "INSERT exitoso (1era) - id_factura: $id_factura, codigo: $codigofactura\n", FILE_APPEND);
+				echo $id_factura;
+			}
+		} else {
+			// Siguiente factura electrónica: incrementar código
+			$codigofactura = $codigo_factura + 1;
+			
+			// Validar que no supere el rango
+			if ($codigofactura > $filaRango['FinalFactura']) {
+				echo "error: Rango de factura electrónica agotado. Inicio: " . $filaRango['InicioFactura'] . ", Final: " . $filaRango['FinalFactura'] . ". Solicita nueva resolución a la DIAN.";
+			} else {
+				$sql_elimnaringresos = mysqli_query($link,"INSERT INTO tbl_factura VALUES (null,'$codigofactura','$id_empresa',current_date(),'$hora','$id_cliente','$totalpago','$pagoCambio','$cambio','$descuento','$totalganancia','$idVendedor','$tipopago','$tipo_factura')");
+				if (!$sql_elimnaringresos) {
+					echo "fallo";
+				} else {
+					$sql_ultimafactura = mysqli_query($link,"SELECT * FROM tbl_factura WHERE tipo_factura=2 ORDER BY id_factura DESC LIMIT 1 ");
 					$filafactura = mysqli_fetch_array($sql_ultimafactura);
 					echo $id_factura = $filafactura['id_factura'];
 				}
 			}
 		}
 	} else if ($operacion == 'insertarfacturaProyecto') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
-		$totalpago = $datos->totalpago;
-		$id_proyecto = $datos->id;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
+		$totalpago = $datos['totalpago'];
+		$id_proyecto = $datos['id'];
 
 
 
@@ -2080,9 +2286,10 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == 'insertarcotizacion') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
-		$totalpago = $datos->totalpago;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
+		$totalpago = $datos['totalpago'];
 
 
 
@@ -2119,12 +2326,13 @@ if ($variable == 'ingresos') {
 			}
 		}
 	} else if ($operacion == 'insertarDetallecotizacion') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidad = $datos->cantidad;
-		$valorTotal = $datos->valorTotal;
-		$id_cotizacion = $datos->id_cotizacion;
+		$id_producto = $datos['id_producto'];
+		$cantidad = $datos['cantidad'];
+		$valorTotal = $datos['valorTotal'];
+		$id_cotizacion = $datos['id_cotizacion'];
 
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detallecotizacion VALUES (null,'$id_cotizacion','$id_producto','$cantidad','$valorTotal')");
 		if (!$sql_detallefactura) {
@@ -2141,14 +2349,22 @@ if ($variable == 'ingresos') {
 
 		}
 	} else if ($operacion == 'insertarDetallefactura') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true); // Decodificar como array
 
-		$id_producto = $datos->id_producto;
-		$cantidadU = $datos->cantidadU;
-		$cantidadF = $datos->cantidadF;
-		$valorTotal = $datos->valorTotal;
-		$id_factura = $datos->id_factura;
-		$descuento = $datos->descuento;
+		$id_producto = $datos['id_producto'] ?? null;
+		$cantidadU = $datos['cantidadU'] ?? 0;
+		$cantidadF = $datos['cantidadF'] ?? 0;
+		$valorTotal = $datos['valorTotal'] ?? 0;
+		$id_factura = $datos['id_factura'] ?? null;
+		$descuento = $datos['descuento'] ?? 0;
+		
+		// Validar datos obligatorios
+		if (!$id_producto || !$id_factura) {
+			echo "fallo";
+			exit;
+		}
+		
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detallefactura VALUES (null,'$id_factura','$id_producto','$cantidadU','$cantidadF','$valorTotal','$descuento','Factura',current_date())");
 		if (!$sql_detallefactura) {
 			echo "fallo";
@@ -2188,12 +2404,13 @@ if ($variable == 'ingresos') {
 			$sql_cantidadinvetario = mysqli_query($link,"UPDATE tbl_inventario SET stock='$newFraccion',Unidad='$NuevaUnidad' WHERE id_producto='$id_producto'");
 		}
 	} else if ($operacion == 'insertarSerialfactura') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$id_serial = $datos->id_serial;
+		$id_producto = $datos['id_producto'] ?? null;
+		$id_serial = $datos['id_serial'] ?? null;
 
-		$id_factura = $datos->id_factura;
+		$id_factura = $datos['id_factura'] ?? null;
 
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detallefacturaserial VALUES (null,'$id_factura','$id_producto','$id_serial')");
 		if (!$sql_detallefactura) {
@@ -2205,12 +2422,13 @@ if ($variable == 'ingresos') {
 			$sql_cantidadinvetario = mysqli_query($link,"UPDATE tbl_productoserial SET estado='Vendido' WHERE id_productoserial='$id_serial'");
 		}
 	} else if ($operacion == 'insertarDetallefacturaProyecto') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidad = $datos->cantidad;
-		$valorTotal = $datos->valorTotal;
-		$id_factura = $datos->id_factura;
+		$id_producto = $datos['id_producto'];
+		$cantidad = $datos['cantidad'];
+		$valorTotal = $datos['valorTotal'];
+		$id_factura = $datos['id_factura'];
 
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detallefacturaproyecto VALUES (null,'$id_factura','$id_producto','$cantidad','$valorTotal')");
 		if (!$sql_detallefactura) {
@@ -2226,10 +2444,11 @@ if ($variable == 'ingresos') {
 			$sql_cantidadinvetario = mysqli_query($link,"UPDATE tbl_inventario SET stock='$nuevoStock' WHERE id_producto='$id_producto'");
 		}
 	} else if ($operacion == 'verificarstock_producto') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_producto = $datos->id_producto;
-		$cantidadU = $datos->cantidadU;
-		$cantidadF = $datos->cantidadF;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_producto = $datos['id_producto'];
+		$cantidadU = $datos['cantidadU'];
+		$cantidadF = $datos['cantidadF'];
 
 		$sql_cantidadinvetario = mysqli_query($link,"SELECT * FROM tbl_inventario WHERE id_producto='$id_producto' ");
 		// $filainvetario = mysqli_fetch_array($sql_cantidadinvetario);
@@ -2245,9 +2464,10 @@ if ($variable == 'ingresos') {
 	}
 } else if ($variable == 'inventario') {
 	if ($operacion == 'inventarioXprodcito') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
+		$id_producto = $datos['id_producto'];
 
 		$sql_inventarioXproducto = mysqli_query($link,"SELECT p.*,p.descripcion,p.codigo_producto,c.nombre_categoria,i.stock,i.* FROM tbl_producto p,tbl_categoria c, tbl_inventario i WHERE i.id_producto=p.id_producto and p.id_categoria=c.id_categoria and p.id_producto='$id_producto'");
 
@@ -2409,9 +2629,10 @@ mysqli_query($link,"SET time_zone = '-05:00'");
 		mysqli_close($link);
 	} else if ($operacion == 'ventaDelDiasFecha') {
 	    echo "DeldiaFechas";
-		$datos = json_decode(file_get_contents("php://input"));
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_final = $datos->fecha_final;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_final = $datos['fecha_final'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.*,pro.*,f.codigo_factura,f.fecha_factura,f.valor_pago, pro.descripcion,SUM(df.total_pago) as TotalPago,f.ganacia,SUM(df.cantidad)  as cantidad,SUM(df.cantidadFraccion) as cantidadFraccion  FROM tbl_factura f, tbl_empresa em,tbl_detallefactura df, tbl_producto pro WHERE f.id_empresa=em.id_empresa and df.id_factura=f.id_factura and df.id_producto=pro.id_producto and f.fecha_factura>='$fecha_inicio' and f.fecha_factura<='$fecha_final' GROUP BY(pro.descripcion)");
@@ -2428,9 +2649,10 @@ mysqli_query($link,"SET time_zone = '-05:00'");
 
 		mysqli_close($link);
 	} else if ($operacion == 'ventaDelDiasDescuentoFechas') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_final = $datos->fecha_final;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_final = $datos['fecha_final'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT sum(descuento) as descuento  FROM tbl_factura  WHERE fecha_factura>='$fecha_inicio' and fecha_factura<='$fecha_final' ");
@@ -2447,9 +2669,10 @@ mysqli_query($link,"SET time_zone = '-05:00'");
 
 		mysqli_close($link);
 	} else if ($operacion == 'ventaDelDiasFechaGanancia') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$fecha_inicio = $datos->fecha_inicio;
-		$fecha_final = $datos->fecha_final;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fecha_inicio = $datos['fecha_inicio'];
+		$fecha_final = $datos['fecha_final'];
 
 
 		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT sum(ganacia) as ganancia  FROM tbl_factura  WHERE fecha_factura>='$fecha_inicio' and fecha_factura<='$fecha_final' ");
@@ -2518,8 +2741,9 @@ mysqli_query($link,"SET time_zone = '-05:00'");
 }
 if ($variable == "categoria") {
 	if ($operacion == 'insertar') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$nombreCategoria = $datos->nombreCategoria;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$nombreCategoria = $datos['nombreCategoria'];
 
 
 
@@ -2532,8 +2756,9 @@ if ($variable == "categoria") {
 		}
 	}
 	if ($operacion == 'insertarBaseDiaria') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$baseDiaria = $datos->valor_Diario;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$baseDiaria = $datos['valor_Diario'];
 
 
 
@@ -2546,10 +2771,11 @@ if ($variable == "categoria") {
 		}
 	}
 	if ($operacion == 'insertarProyectoSQL') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$nombreProyecto = $datos->nombreProyecto;
-		$idCliente = $datos->idCliente;
-		$manoObra = $datos->manoObra;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$nombreProyecto = $datos['nombreProyecto'];
+		$idCliente = $datos['idCliente'];
+		$manoObra = $datos['manoObra'];
 
 
 
@@ -2572,9 +2798,10 @@ if ($variable == "categoria") {
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeBaseDiaria')
 	{
-		$datos = json_decode(file_get_contents("php://input"));
-		$fecha_inicio=$datos->fecha_inicio;
-		$fecha_final=$datos->fecha_final;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fecha_inicio=$datos['fecha_inicio'];
+		$fecha_final=$datos['fecha_final'];
 		$sql_todoCategoria =  mysqli_query($link,"SELECT sum(base) as base FROM  tbl_basediaria WHERE fecha>='$fecha_inicio' and fecha<='$fecha_final'");
 
 		$rows = [];
@@ -2639,10 +2866,11 @@ if ($variable == "categoria") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "actualizandoCategoria") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_categoria = $datos->id_categoriaActualizar;
-		$nombre_categoria = $datos->nombreCategoriaActualizar;
+		$id_categoria = $datos['id_categoriaActualizar'];
+		$nombre_categoria = $datos['nombreCategoriaActualizar'];
 
 
 
@@ -2653,10 +2881,11 @@ if ($variable == "categoria") {
 			echo "exito";
 		}
 	} else if ($operacion == "updatepass") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id = $datos->id;
-		$pass = $datos->pass;
+		$id = $datos['id'];
+		$pass = $datos['pass'];
 
 		$updatePassUser = mysqli_query($link,"UPDATE  tbl_usuario_sistema SET password= '$pass', repi_password='$pass' WHERE id_usuariosistema='$id'");
 		if (!$updatePassUser) {
@@ -2665,10 +2894,11 @@ if ($variable == "categoria") {
 			echo "exito";
 		}
 	} else if ($operacion == "actualizandoEstadoSQl") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id = $datos->id;
-		$estado = $datos->estado;
+		$id = $datos['id'];
+		$estado = $datos['estado'];
 
 
 
@@ -2679,8 +2909,9 @@ if ($variable == "categoria") {
 			echo "exito";
 		}
 	} else if ($operacion == "eliminarcategoria") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->idEliminarCategoria;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['idEliminarCategoria'];
 
 		$updateCategoria = mysqli_query($link,"UPDATE tbl_producto SET id_categoria='1' WHERE id_categoria='$id'");
 
@@ -2699,11 +2930,12 @@ if ($variable == "categoria") {
 
 if ($variable == "empresa") {
 	if ($operacion == 'insertar') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$nitEmpresa = $datos->nitEmpresa;
-		$nombreEmpresa = $datos->nombreEmpresa;
-		$direccionEmpresa = $datos->direccionEmpresa;
-		$telefonoEmpresa = $datos->telefonoEmpresa;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$nitEmpresa = $datos['nitEmpresa'];
+		$nombreEmpresa = $datos['nombreEmpresa'];
+		$direccionEmpresa = $datos['direccionEmpresa'];
+		$telefonoEmpresa = $datos['telefonoEmpresa'];
 
 
 		$eliminarempresa = mysqli_query($link,"DELETE  FROM tbl_empresa");
@@ -2725,11 +2957,12 @@ if ($variable == "empresa") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "actualizandoEmpresa") {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_empresa = $datos->id_empresaActualizar;
-		$nombre_empresa = $datos->nombreEmpresaActualizar;
-		$nit_empresa = $datos->nitEmpresactualizar;
+		$id_empresa = $datos['id_empresaActualizar'];
+		$nombre_empresa = $datos['nombreEmpresaActualizar'];
+		$nit_empresa = $datos['nitEmpresactualizar'];
 
 
 
@@ -2740,8 +2973,9 @@ if ($variable == "empresa") {
 			echo "exito";
 		}
 	} else if ($operacion == "eliminarempresa") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->idEliminarEmpresa;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['idEliminarEmpresa'];
 
 
 		$eliminarempresa = mysqli_query($link,"DELETE  FROM tbl_empresa WHERE 	id_empresa='$id'");
@@ -2757,10 +2991,11 @@ if ($variable == "empresa") {
 if ($variable == "egreso") {
 
 	if ($operacion == 'insertarTegreso') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$nombreEgreso = $datos->nombreEgreso;
-		$codigoEgreso = $datos->codigoEgreso;
-		$concepto = $datos->concepto;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$nombreEgreso = $datos['nombreEgreso'];
+		$codigoEgreso = $datos['codigoEgreso'];
+		$concepto = $datos['concepto'];
 
 
 
@@ -2775,11 +3010,12 @@ if ($variable == "egreso") {
 
 
 	if ($operacion == 'egreso') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$idtipoEgreso = $datos->idTipoEgreso;
-		$valorEgreso = $datos->valorEgreso;
-		$pagado = $datos->pagado;
-		$mes = $datos->mes;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$idtipoEgreso = $datos['idTipoEgreso'];
+		$valorEgreso = $datos['valorEgreso'];
+		$pagado = $datos['pagado'];
+		$mes = $datos['mes'];
 
 
 
@@ -2794,10 +3030,11 @@ if ($variable == "egreso") {
 	}
 
 	if ($operacion == 'egresoProyecto') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$pagado = $datos->pagadoProyecto;
-		$valor = $datos->valorEgresoProyecto;
-		$idpro = $datos->idpro;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$pagado = $datos['pagadoProyecto'];
+		$valor = $datos['valorEgresoProyecto'];
+		$idpro = $datos['idpro'];
 
 
 
@@ -2839,11 +3076,12 @@ if ($variable == "egreso") {
 
 if ($variable == "cliente") {
 	if ($operacion == 'insertar') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$ccCliente = $datos->ccCliente;
-		$nombreCliente = $datos->nombreCliente;
-		$direccionCliente = $datos->direccionCliente;
-		$telefonoCliente = $datos->telefonoCliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$ccCliente = $datos['ccCliente'];
+		$nombreCliente = $datos['nombreCliente'];
+		$direccionCliente = $datos['direccionCliente'];
+		$telefonoCliente = $datos['telefonoCliente'];
 
 
 		$verificarCodigoProducto = mysqli_query($link,"SELECT cc_cliente FROM tbl_cliente WHERE cc_cliente='$ccCliente'");
@@ -2870,8 +3108,9 @@ if ($variable == "cliente") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeClientesCC') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$ccCliente = $datos->cc;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$ccCliente = $datos['cc'];
 		$sql_todoCategoria =  mysqli_query($link,"SELECT * FROM  tbl_cliente WHERE cc_cliente='$ccCliente'");
 
 		$rows = [];
@@ -2882,12 +3121,13 @@ if ($variable == "cliente") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "actualizandoClientes") {
-		$datos = json_decode(file_get_contents("php://input"));;
-		$id = $datos->id_clienteActualizar;
-		$cc = $datos->ccClienteActualizar;
-		$nombre = $datos->nombreClienteActualizar;
-		$direccion = $datos->direccionClienteActualizar;
-		$telefono = $datos->telefonoClienteActualizar;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);;
+		$id = $datos['id_clienteActualizar'];
+		$cc = $datos['ccClienteActualizar'];
+		$nombre = $datos['nombreClienteActualizar'];
+		$direccion = $datos['direccionClienteActualizar'];
+		$telefono = $datos['telefonoClienteActualizar'];
 
 
 
@@ -2898,8 +3138,9 @@ if ($variable == "cliente") {
 			echo "exito";
 		}
 	} else if ($operacion == "eliminarcliente") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->idEliminarCliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['idEliminarCliente'];
 
 
 		$eliminarempresa = mysqli_query($link,"DELETE  FROM tbl_cliente WHERE 	id_cliente='$id'");
@@ -2915,27 +3156,28 @@ if ($variable == "cliente") {
 
 if ($variable == "producto") {
 	if ($operacion == 'insertar') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$CodigoProducto = $datos->CodigoProducto;
-		$CodigoBarras = $datos->CodigBarras;
-		$DescripcionProducto = $datos->DescripcionProducto;
-		$presentacion = $datos->presentacion;
-		$marca = $datos->marcaProducto;
-		$idProveedor = $datos->idProveedor;
-		$idCategoria = $datos->idCategoria;
-		$unidadCerrada = $datos->unidadCerrada;
-		$fraccion = $datos->fraccion;
-		$idIva = $datos->idIva;
-		$idSeccion = isset($datos->idSeccion) ? $datos->idSeccion : 1;
-		$valorProducto = $datos->valorProducto;
-		$valorVentaProducto = $datos->valorVentaProducto;
-		$valorVentaProductoUnidad = $datos->valorVentaProductoUnidad;
-		$stockMin = $datos->stockMin;
-		$renta = $datos->renta;
-		// $editable=$datos->editable;
+		$CodigoProducto = $datos['CodigoProducto'];
+		$CodigoBarras = $datos['CodigBarras'];
+		$DescripcionProducto = $datos['DescripcionProducto'];
+		$presentacion = $datos['presentacion'];
+		$marca = $datos['marcaProducto'];
+		$idProveedor = $datos['idProveedor'];
+		$idCategoria = $datos['idCategoria'];
+		$unidadCerrada = $datos['unidadCerrada'];
+		$fraccion = $datos['fraccion'];
+		$idIva = $datos['idIva'];
+		$idSeccion = isset($datos['idSeccion']) ? $datos['idSeccion'] : 1;
+		$valorProducto = $datos['valorProducto'];
+		$valorVentaProducto = $datos['valorVentaProducto'];
+		$valorVentaProductoUnidad = $datos['valorVentaProductoUnidad'];
+		$stockMin = $datos['stockMin'];
+		$renta = $datos['renta'];
+		// $editable=$datos['editable'];
 		$CodigoProductoFALSO = -10;
-		// $serial=$datos->serialProducto;
+		// $serial=$datos['serialProducto'];
 		if ($idSeccion == "" || $idSeccion == null) {
 			$idSeccion = 1;
 		}
@@ -2966,8 +3208,9 @@ if ($variable == "producto") {
 		}
 	}
 	if ($operacion == 'insertarSeccionD') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$seccion = $datos->seccion;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$seccion = $datos['seccion'];
 
 
 
@@ -2991,19 +3234,20 @@ if ($variable == "producto") {
 	}
 
 	if ($operacion == 'insertarProveedor') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$CodigoProveedor = $datos->CodigoProveedor;
-		$NombreProveedor = $datos->NombreProveedor;
-		$responsable = $datos->responsable;
-		$direccionProveedor = $datos->direccionProveedor;
-		$telefonoProveedor = $datos->telefonoProveedor;
-		$departamento = $datos->departamento;
+		$CodigoProveedor = $datos['CodigoProveedor'];
+		$NombreProveedor = $datos['NombreProveedor'];
+		$responsable = $datos['responsable'];
+		$direccionProveedor = $datos['direccionProveedor'];
+		$telefonoProveedor = $datos['telefonoProveedor'];
+		$departamento = $datos['departamento'];
 
-		$rentabilidad = $datos->rentabilidad;
-		$diasPago = $datos->diasPago;
+		$rentabilidad = $datos['rentabilidad'];
+		$diasPago = $datos['diasPago'];
 
-		// $serial=$datos->serialProducto;
+		// $serial=$datos['serialProducto'];
 
 
 		$verificarCodigoProducto = mysqli_query($link,"SELECT codigo_proveedor FROM tbl_proveedor WHERE codigo_proveedor='$CodigoProveedor'");
@@ -3029,8 +3273,9 @@ if ($variable == "producto") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeProductosBarra') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$barra = $datos->barra;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$barra = $datos['barra'];
 
 		$sql_listadoProducto = mysqli_query($link,"SELECT p.valor_venta*i.iva/100 as ivaValor, p.*,c.*,i.*,pro.*,inv.* FROM tbl_producto p, tbl_categoria c, tbl_iva i,tbl_proveedor pro,tbl_inventario inv WHERE inv.id_producto=p.id_producto and p.id_categoria=c.id_categoria and i.id_iva=p.id_iva and pro.id_proveedor=p.id_proveedor and p.codigo_producto='$barra' ORDER BY p.descripcion ASC");
 		$rows = [];
@@ -3096,8 +3341,9 @@ if ($variable == "producto") {
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeProductosChange') {
 
-		$datos = json_decode(file_get_contents("php://input"));
-		$barra = $datos->barra;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$barra = $datos['barra'];
 		$sql_listadoProducto = mysqli_query($link,"SELECT inv.*,p.valor_venta*i.iva/100 as ivaValor, p.*,c.*,i.*,pro.* FROM tbl_producto p, tbl_categoria c, tbl_iva i,tbl_proveedor pro, tbl_inventario inv WHERE p.id_categoria=c.id_categoria and i.id_iva=p.id_iva and pro.id_proveedor=p.id_proveedor and inv.id_producto=p.id_producto and p.codigo_barras='$barra' or p.codigo_barrasUno='$barra' or p.codigo_barrasDos='$barra'");
 		$rows = [];
 		while ($respuesta = mysqli_fetch_assoc($sql_listadoProducto)) {
@@ -3108,8 +3354,9 @@ if ($variable == "producto") {
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeProductosChangeLetra') {
 
-		$datos = json_decode(file_get_contents("php://input"));
-		$barra = $datos->barra;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$barra = $datos['barra'];
 		$sql_listadoProducto = mysqli_query($link,"SELECT inv.*,p.valor_venta*i.iva/100 as ivaValor, p.*,c.*,i.*,pro.* FROM tbl_producto p, tbl_categoria c, tbl_iva i,tbl_proveedor pro, tbl_inventario inv WHERE p.id_categoria=c.id_categoria and i.id_iva=p.id_iva and inv.id_producto=p.id_producto and pro.id_proveedor=p.id_proveedor and p.descripcion LIKE '%" . $barra . "%' limit 10");
 		$rows = [];
 		while ($respuesta = mysqli_fetch_assoc($sql_listadoProducto)) {
@@ -3120,8 +3367,9 @@ if ($variable == "producto") {
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeProductoskeypress') {
 
-		$datos = json_decode(file_get_contents("php://input"));
-		$codigo = $datos->codigo;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$codigo = $datos['codigo'];
 		$sql_listadoProducto = mysqli_query($link,"SELECT p.valor_venta*i.iva/100 as ivaValor, p.*,c.*,i.*,pro.* FROM tbl_producto p, tbl_categoria c, tbl_iva i,tbl_proveedor pro WHERE p.id_categoria=c.id_categoria and i.id_iva=p.id_iva and pro.id_proveedor=p.id_proveedor and p.codigo_producto='$codigo' ");
 		$rows = [];
 		while ($respuesta = mysqli_fetch_assoc($sql_listadoProducto)) {
@@ -3142,8 +3390,9 @@ if ($variable == "producto") {
 		mysqli_close($link);
 	} else if ($operacion == 'listadodeEgresoProyecto') {
 
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->id;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['id'];
 
 		$sql_todoCategoria =  mysqli_query($link,"SELECT * FROM tbl_egresoproyecto WHERE id_proyecto='$id'");
 
@@ -3155,25 +3404,26 @@ if ($variable == "producto") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == "actualizandoProducto") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_producto = $datos->id_ProductoActualizar;
-		$CodigoProducto = $datos->CodigoProducto;
-		$CodigoBarras = $datos->CodigBarras;
-		$CodigoBarrasU = $datos->CodigBarrasU;
-		$CodigoBarrasD = $datos->CodigBarrasD;
-		$DescripcionProducto = $datos->DescripcionProducto;
-		$presentacion = $datos->presentacion;
-		$marca = $datos->marcaProducto;
-		$idProveedor = $datos->idProveedor;
-		$idCategoria = $datos->idCategoria;
-		$idIva = $datos->idIva;
-		$idSeccion = $datos->idSeccion;
-		$unidadCerrada = $datos->unidadCerrada;
-		$fraccion = $datos->fraccion;
-		$valorProducto = $datos->valorProducto;
-		$valorVentaProducto = $datos->valorVentaProducto;
-		$valorUnidadProducto = $datos->valorUnidadProducto;
-		$stockMin = $datos->stockMin;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_producto = $datos['id_ProductoActualizar'];
+		$CodigoProducto = $datos['CodigoProducto'];
+		$CodigoBarras = $datos['CodigBarras'];
+		$CodigoBarrasU = $datos['CodigBarrasU'];
+		$CodigoBarrasD = $datos['CodigBarrasD'];
+		$DescripcionProducto = $datos['DescripcionProducto'];
+		$presentacion = $datos['presentacion'];
+		$marca = $datos['marcaProducto'];
+		$idProveedor = $datos['idProveedor'];
+		$idCategoria = $datos['idCategoria'];
+		$idIva = $datos['idIva'];
+		$idSeccion = $datos['idSeccion'];
+		$unidadCerrada = $datos['unidadCerrada'];
+		$fraccion = $datos['fraccion'];
+		$valorProducto = $datos['valorProducto'];
+		$valorVentaProducto = $datos['valorVentaProducto'];
+		$valorUnidadProducto = $datos['valorUnidadProducto'];
+		$stockMin = $datos['stockMin'];
 		// Recalcular rentabilidad en servidor (igual que front-end) si cambian valores que la afectan
 		if ($valorVentaProducto == 0) {
 			$rentabilidad = 0;
@@ -3205,17 +3455,18 @@ if ($variable == "producto") {
 		}
 		// }
 	} else if ($operacion == "actualizandoProveedor") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_proveedor = $datos->id_proveedor;
-		$CodigoProveedor = $datos->CodigoProveedor;
-		$NombreProveedor = $datos->NombreProveedor;
-		$responsable = $datos->responsable;
-		$direccionProveedor = $datos->direccionProveedor;
-		$telefonoProveedor = $datos->telefonoProveedor;
-		$departamento = $datos->departamento;
-		$estado = $datos->estado;
-		$rentabilidad = $datos->rentabilidad;
-		$diasPago = $datos->diasPago;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_proveedor = $datos['id_proveedor'];
+		$CodigoProveedor = $datos['CodigoProveedor'];
+		$NombreProveedor = $datos['NombreProveedor'];
+		$responsable = $datos['responsable'];
+		$direccionProveedor = $datos['direccionProveedor'];
+		$telefonoProveedor = $datos['telefonoProveedor'];
+		$departamento = $datos['departamento'];
+		$estado = $datos['estado'];
+		$rentabilidad = $datos['rentabilidad'];
+		$diasPago = $datos['diasPago'];
 
 		// $verificarCodigoProducto=mysqli_query($link,"SELECT codigo_producto FROM tbl_producto WHERE codigo_producto='$CodigoProducto' OR codigo_barras='$CodigoBarras' AND id_producto!='$id_producto'",$link);
 		// if(mysqli_num_rows($verificarCodigoProducto)>0){
@@ -3233,8 +3484,9 @@ if ($variable == "producto") {
 		}
 		// }
 	} else if ($operacion == "eliminarproducto") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->idEliminarProducto;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['idEliminarProducto'];
 
 
 		$eliminarempresa = mysqli_query($link,"DELETE  FROM tbl_producto WHERE id_producto='$id'");
@@ -3244,8 +3496,9 @@ if ($variable == "producto") {
 			echo "exito";
 		}
 	} else if ($operacion == "eliminarproveedor") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id = $datos->idEliminarProveedor;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id = $datos['idEliminarProveedor'];
 
 
 		$eliminarempresa = mysqli_query($link,"DELETE  FROM tbl_proveedor WHERE id_proveedor='$id'");
@@ -3277,13 +3530,14 @@ else if ($variable == "credito") {
 	}
 
 	if ($operacion == 'insertarcredito') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
-		$totalapagar_plansepare = $datos->totalapagar_plansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
+		$totalapagar_plansepare = $datos['totalapagar_plansepare'];
 
-		$fecha_inicioPlansepare = $datos->fecha_inicioPlansepare;
-		$fechaFin_plansepare = $datos->fechaFin_plansepare;
-		$valor_aumento = $datos->valor_aumento;
+		$fecha_inicioPlansepare = $datos['fecha_inicioPlansepare'];
+		$fechaFin_plansepare = $datos['fechaFin_plansepare'];
+		$valor_aumento = $datos['valor_aumento'];
 
 		$sql_creditovalores = mysqli_query($link,"SELECT * FROM tbl_creditovalores");
 		$filacreditocalores = mysqli_fetch_array($sql_creditovalores);
@@ -3313,8 +3567,9 @@ else if ($variable == "credito") {
 			$sql_guardar_pago = mysqli_query($link,"INSERT INTO tbl_abonos_credito VALUES(null,'$id_credito','$id_cliente',0,current_date())");
 		}
 	} else if ($operacion == 'busquedaDetallaCuotas_Planes') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_credito = $datos->id_credito;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_credito = $datos['id_credito'];
 
 		$sql_lisdetallepagosplansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.cantidadFraccion,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_credito,abp.valor_abono,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.total_pagosepare,pla.estadoproductos,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_credito abp WHERE abp.id_credito=pla.id_credito and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_credito='$id_credito' GROUP BY dpl.id_producto");
 
@@ -3327,8 +3582,9 @@ else if ($variable == "credito") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaDetalle_Planes') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_credito = $datos->id_credito;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_credito = $datos['id_credito'];
 
 		$sql_lisdetallepagosplansepare = mysqli_query($link,"SELECT abp.fecha_abono,abp.id_abonos_credito,abp.valor_abono,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,cl.cc_cliente,cl.nombre_cliente FROM tbl_credito pla, tbl_cliente cl, tbl_abonos_credito abp WHERE abp.id_credito=pla.id_credito and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and  pla.id_credito='$id_credito'");
 
@@ -3341,12 +3597,13 @@ else if ($variable == "credito") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'actualizacionCuotaplansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$cuotaanterior = $datos->cuotaanterior;
-		$id_abonos_credito = $datos->id_abonos_credito;
-		$id_credito = $datos->id_credito;
-		$nuevacuota = $datos->nuevacuota;
-		$descuento_abonos = $datos->descuento_abonos;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$cuotaanterior = $datos['cuotaanterior'];
+		$id_abonos_credito = $datos['id_abonos_credito'];
+		$id_credito = $datos['id_credito'];
+		$nuevacuota = $datos['nuevacuota'];
+		$descuento_abonos = $datos['descuento_abonos'];
 
 		$descuentoresta = $descuento_abonos + $cuotaanterior;
 		$descuentorestados = $descuentoresta - $nuevacuota;
@@ -3363,9 +3620,10 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == 'busquedaCreditoPorfechaRango') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$sql_listadocreditos = mysqli_query($link,"SELECT pla.codigoCredito, pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.fecha_inicio>='$fechaInicialPansepare' and pla.fecha_inicio<='$fechaFinalPansepare' GROUP by pla.id_credito");
 
@@ -3442,8 +3700,9 @@ else if ($variable == "credito") {
 		echo "ok";
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaCreditoPorcodigo') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$codigoCredito = $datos->codigoCredito;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$codigoCredito = $datos['codigoCredito'];
 
 
 		$sql_listadocreditos = mysqli_query($link,"SELECT us.*,pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c,tbl_usuario_sistema us WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and  us.id_usuariosistema=pla.id_vendedor and pla.codigoCredito='$codigoCredito' GROUP by pla.id_credito");
@@ -3472,8 +3731,9 @@ else if ($variable == "credito") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'busquedaCreditoPorCliente') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_Cliente = $datos->id_Cliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_Cliente = $datos['id_Cliente'];
 
 
 		$sql_listadocreditos = mysqli_query($link,"SELECT pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and cl.id_cliente='$id_Cliente' GROUP by pla.id_credito");
@@ -3501,10 +3761,11 @@ else if ($variable == "credito") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'eliminado_plansepare') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$estadoproductos = $datos->estadoproductos;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$estadoproductos = $datos['estadoproductos'];
 
 
 		$sql_BUSCARABONOS = mysqli_query($link,"SELECT * FROM  tbl_abonos_plansepare WHERE id_plansepare='$id_plansepare'");
@@ -3628,8 +3889,9 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == 'eliminado_creditoxcliente') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_credito = $datos->id_credito;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_credito = $datos['id_credito'];
 		$eliminarabonoscredito = mysqli_query($link,"DELETE FROM tbl_abonos_credito WHERE id_credito='$id_credito'");
 		if (!$eliminarabonoscredito) {
 			echo "falloabono";
@@ -3646,8 +3908,9 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == 'busquedaPlanesPorCliente') {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_cliente = $datos->id_cliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_cliente = $datos['id_cliente'];
 
 		$sql_listadoplansepare = mysqli_query($link,"SELECT pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and cl.id_cliente='$id_cliente'  GROUP by pla.id_plansepare");
 
@@ -3674,13 +3937,14 @@ else if ($variable == "credito") {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	} else if ($operacion == 'insertarDetalleCredito') {
-		$datos = json_decode(file_get_contents("php://input"));
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
 
-		$id_producto = $datos->id_producto;
-		$cantidadU = $datos->cantidadU;
-		$cantidadF = $datos->cantidadF;
-		$valorTotal = $datos->valorTotal;
-		$id_credito = $datos->id_credito;
+		$id_producto = $datos['id_producto'];
+		$cantidadU = $datos['cantidadU'];
+		$cantidadF = $datos['cantidadF'];
+		$valorTotal = $datos['valorTotal'];
+		$id_credito = $datos['id_credito'];
 
 		$sql_detallefactura = mysqli_query($link,"INSERT INTO tbl_detalle_credito VALUES (null,'$id_credito','$id_producto','$cantidadU','$cantidadF','$valorTotal','Credito',current_date())");
 		if (!$sql_detallefactura) {
@@ -3721,13 +3985,14 @@ else if ($variable == "credito") {
 			$sql_cantidadinvetario = mysqli_query($link,"UPDATE tbl_inventario SET stock='$newFraccion',Unidad='$NuevaUnidad' WHERE id_producto='$id_producto'");
 		}
 	} else if ($operacion == "generarPagocuotaCredito") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_credito = (int)$datos->id_credito;
-		$id_cliente = (int)$datos->id_cliente;
-		$pagocuota_plansepare = (float)$datos->pagocuota_plansepare;
-		$deuda_actual = (float)$datos->deuda_actual;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_credito = (int)$datos['id_credito'];
+		$id_cliente = (int)$datos['id_cliente'];
+		$pagocuota_plansepare = (float)$datos['pagocuota_plansepare'];
+		$deuda_actual = (float)$datos['deuda_actual'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$deuda = $deuda_actual - $pagocuota_plansepare;
 		if ($deuda_actual < $pagocuota_plansepare) {
@@ -3775,9 +4040,10 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == "entregarProductosPl") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
 
 		$sql_lisadoDetallPlansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.id_producto,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_plansepare='$id_plansepare' GROUP BY dpl.id_producto");
 
@@ -3836,11 +4102,12 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == "entregarProductosPlXrangofecha") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$sql_lisadoDetallPlansepare = mysqli_query($link,"SELECT dpl.cantidad,dpl.valor_actual_producto,abp.fecha_abono,abp.id_abonos_plansepare,abp.valor_abono,pla.id_plansepare,cl.id_cliente,pla.valor_aumetoplansepare,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.nombre,pr.id_producto,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_plansepare pla, tbl_detalle_plansepare dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c, tbl_abonos_plansepare abp WHERE abp.id_plansepare=pla.id_plansepare and abp.id_cliente=cl.id_cliente and pla.id_cliente=cl.id_cliente and dpl.id_plansepare=pla.id_plansepare and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.id_plansepare='$id_plansepare' GROUP BY dpl.id_producto");
 
@@ -3877,13 +4144,14 @@ else if ($variable == "credito") {
 			}
 		}
 	} else if ($operacion == "generarPagocuotaPlansepareXclientes") {
-		$datos = json_decode(file_get_contents("php://input"));
-		$id_plansepare = $datos->id_plansepare;
-		$id_cliente = $datos->id_cliente;
-		$pagocuota_plansepare = $datos->pagocuota_plansepare;
-		$deuda_actual = $datos->deuda_actual;
-		$fechaInicialPansepare = $datos->fechaInicialPansepare;
-		$fechaFinalPansepare = $datos->fechaFinalPansepare;
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+		$id_plansepare = $datos['id_plansepare'];
+		$id_cliente = $datos['id_cliente'];
+		$pagocuota_plansepare = $datos['pagocuota_plansepare'];
+		$deuda_actual = $datos['deuda_actual'];
+		$fechaInicialPansepare = $datos['fechaInicialPansepare'];
+		$fechaFinalPansepare = $datos['fechaFinalPansepare'];
 
 		$deuda = $deuda_actual - $pagocuota_plansepare;
 
