@@ -14391,8 +14391,177 @@ $scope.verificarpassVentadelDia = function(pass){
 
 }
 
+// ===== REPORTES DE FACTURAS (Server-side pagination) =====
+$scope.reporteSeleccionado = null;
+$scope.searchReporte = '';
+$scope.pageReporteNormales = 1;
+$scope.pageReporteElectronicas = 1;
+$scope.itemsPerPage = 25;
+$scope.totalReportesNormales = 0;
+$scope.totalReportesElectronicas = 0;
 
+// Cargar página de facturas normales desde servidor
+$scope.cargarPaginaNormales = function(page) {
+	if (!page) page = $scope.pageReporteNormales;
+	$scope.pageReporteNormales = page;
+	
+	var params = {
+		page: page,
+		search: $scope.searchReporte || '',
+		limit: $scope.itemsPerPage
+	};
+	
+	console.log('Cargando página normales:', params);
+	
+	$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=reporteFacturasNormales", params)
+	.success(function(response) {
+		console.log('Respuesta página normales:', response);
+		$scope.itemsReporteNormales = response.data || [];
+		$scope.totalReportesNormales = response.total || 0;
+		$scope.maxPaginasNormales = Math.ceil($scope.totalReportesNormales / $scope.itemsPerPage);
+	})
+	.error(function(data, status) {
+		console.log('Error cargando página normales:', data, status);
+		$scope.itemsReporteNormales = [];
+	});
+};
+
+// Cargar página de facturas electrónicas desde servidor
+$scope.cargarPaginaElectronicas = function(page) {
+	if (!page) page = $scope.pageReporteElectronicas;
+	$scope.pageReporteElectronicas = page;
+	
+	var params = {
+		page: page,
+		search: $scope.searchReporte || '',
+		limit: $scope.itemsPerPage
+	};
+	
+	console.log('Cargando página electronicas:', params);
+	
+	$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=reporteFacturasElectronicas", params)
+	.success(function(response) {
+		console.log('Respuesta página electronicas:', response);
+		$scope.itemsReporteElectronicas = response.data || [];
+		$scope.totalReportesElectronicas = response.total || 0;
+		$scope.maxPaginasElectronicas = Math.ceil($scope.totalReportesElectronicas / $scope.itemsPerPage);
+	})
+	.error(function(data, status) {
+		console.log('Error cargando página electronicas:', data, status);
+		$scope.itemsReporteElectronicas = [];
+	});
+};
+
+// Watch para búsqueda - vuelve a página 1 cuando cambia
+$scope.$watch('searchReporte', function(newVal, oldVal) {
+	if (newVal !== oldVal) {
+		if ($scope.reporteSeleccionado === 'normales') {
+			$scope.pageReporteNormales = 1;
+			$scope.cargarPaginaNormales(1);
+		} else if ($scope.reporteSeleccionado === 'electronicas') {
+			$scope.pageReporteElectronicas = 1;
+			$scope.cargarPaginaElectronicas(1);
+		}
+	}
+});
+
+$scope.exportarExcel = function(tipo) {
+	// Mostrar mensaje de carga
+	new PNotify({
+		title: 'Descargando...',
+		text: 'Preparando datos para exportar a Excel',
+		type: 'info',
+		styling: 'bootstrap3'
+	});
+	
+	var params = {
+		page: 1,
+		search: $scope.searchReporte || '',
+		limit: 999999  // Un número muy grande para obtener todos los registros
+	};
+	
+	var operacion = (tipo === 'normales') ? 'reporteFacturasNormales' : 'reporteFacturasElectronicas';
+	
+	$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=" + operacion, params)
+	.success(function(response) {
+		var data = response.data;
+		
+		if (!data || data.length === 0) {
+			new PNotify({
+				title: 'Sin datos',
+				text: 'No hay datos para exportar',
+				type: 'warning',
+				styling: 'bootstrap3'
+			});
+			return;
+		}
+		
+		var csv = 'ID,Código,Fecha,Hora,Cliente,CC Cliente,Valor Pago,Descuento,Ganancia,Tipo Pago\n';
+		data.forEach(function(factura) {
+			csv += factura.id_factura + ',"' + factura.codigo_factura + '","' + factura.fecha_factura + '","' + factura.hora + '",' +
+			       '"' + (factura.nombre_cliente || '').replace(/"/g, '""') + '","' + (factura.cc_cliente || '').replace(/"/g, '""') + '",' +
+			       factura.valor_pago + ',' + factura.descuento + ',' + factura.ganacia + ',"' + (factura.tipoPago || '') + '"\n';
+		});
+		
+		var blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+		var link = document.createElement('a');
+		var url = URL.createObjectURL(blob);
+		var fecha = new Date().toISOString().slice(0, 10);
+		var nombre = 'Reporte_' + tipo + '_' + fecha + '.csv';
+		link.setAttribute('href', url);
+		link.setAttribute('download', nombre);
+		link.style.visibility = 'hidden';
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		
+		new PNotify({
+			title: 'Éxito!',
+			text: 'Se descargaron ' + data.length + ' registros',
+			type: 'success',
+			styling: 'bootstrap3'
+		});
+	})
+	.error(function(data, status) {
+		new PNotify({
+			title: 'Error!',
+			text: 'Error al descargar los datos para exportar',
+			type: 'error',
+			styling: 'bootstrap3'
+		});
+	});
+};
+
+$scope.cargarReporteFacturasNormales = function()
+{
+	$scope.reporteSeleccionado = 'normales';
+	$scope.searchReporte = '';
+	$scope.pageReporteNormales = 1;
+	$scope.cargarPaginaNormales(1);
+	
+	new PNotify({
+		title: 'Cargando...',
+		text: 'Cargando reporte de facturas normales',
+		type: 'info',
+		styling: 'bootstrap3',
+		hide: true
+	});
+}
+
+$scope.cargarReporteFacturasElectronicas = function()
+{
+	$scope.reporteSeleccionado = 'electronicas';
+	$scope.searchReporte = '';
+	$scope.pageReporteElectronicas = 1;
+	$scope.cargarPaginaElectronicas(1);
+	
+	new PNotify({
+		title: 'Cargando...',
+		text: 'Cargando reporte de facturas electrónicas',
+		type: 'info',
+		styling: 'bootstrap3',
+		hide: true
+	});
+}
 
 }]);
-
-
