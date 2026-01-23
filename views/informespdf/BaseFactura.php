@@ -158,7 +158,7 @@ table{
     </h4>
     <h4 class="cabecera"> ~~Gracias por su compra~~</h4> <br>';
 
-    if($_REQUEST["cufe"] !== NULL)
+    if(isset($_REQUEST["cufe"]) && $_REQUEST["cufe"] !== NULL && $_REQUEST["cufe"] !== '')
     {
         $variable_html .= '<div class="cabecera" style="border-top: 1px solid #ccc; margin-top: 20px; padding-top: 10px;">
         <h4 class="cabecera">Factura Electrónica validada por la DIAN</h4>

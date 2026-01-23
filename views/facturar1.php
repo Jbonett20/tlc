@@ -224,6 +224,21 @@
 		
 				</div>
 				<div class="card-footer" ng-if="ContraDescuentroBotonFacturar==1">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label><strong>Tipo de Factura:</strong></label>
+							<div style="margin-top:10px;">
+								<label style="margin-right:20px; cursor:pointer;">
+									<input type="radio" name="tipo_factura" ng-value="'1'" ng-model="cambioFacturaDinero.tipo_factura" ng-checked="true">
+									📄 Normal
+								</label>
+								<label style="cursor:pointer;">
+									<input type="radio" name="tipo_factura" ng-value="'2'" ng-model="cambioFacturaDinero.tipo_factura">
+									⚡ Electrónica (DIAN)
+								</label>
+							</div>
+						</div>
+					</div>
 					<button type="button" class="btn btn-primary" ng-click="guardarFacturaPress(insertClientes,cambioFacturaDinero)">
 					<i class="material-icons">play_for_work</i> Facturar
 					</button>

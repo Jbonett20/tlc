@@ -30,10 +30,10 @@ $data = json_decode($requestBody, true); // Decodificar JSON a array
 
 $idFact=$data['idFact'];
 
-// Crear archivo de log personalizado
-$logFile = __DIR__ . '/debug_factura_electronica.log';
-file_put_contents($logFile, "\n=== Nueva petición: " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
-file_put_contents($logFile, "ID Factura: $idFact\n", FILE_APPEND);
+// Crear archivo de log personalizado - usar /tmp para evitar problemas de permisos
+$logFile = '/tmp/debug_factura_electronica_' . date('Y-m-d') . '.log';
+@file_put_contents($logFile, "\n=== Nueva petición: " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
+@file_put_contents($logFile, "ID Factura: $idFact\n", FILE_APPEND);
 
 // Validar que existe el ID de factura
 if (empty($idFact)) {
@@ -61,16 +61,28 @@ if (!$row_factura) {
     exit;
 }
 
+// VALIDAR QUE SEA FACTURA ELECTRÓNICA (tipo_factura = 2)
+if ($row_factura['tipo_factura'] != 2) {
+    http_response_code(400);
+    echo json_encode([
+        "success" => false,
+        "message" => "Error: Esta factura NO es electrónica (tipo_factura=" . ($row_factura['tipo_factura'] ?? 'NULL') . "). Solo se pueden enviar facturas electrónicas a la DIAN.",
+        "step" => "validation_tipo_factura",
+        "tipo_factura_recibido" => $row_factura['tipo_factura']
+    ]);
+    exit;
+}
+
 //obtener datos detalle factura
 $sql_query = "SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='$idFact'";
 error_log("SQL Query: " . $sql_query);
-file_put_contents($logFile, "SQL Query: $sql_query\n", FILE_APPEND);
+@file_put_contents($logFile, "SQL Query: $sql_query\n", FILE_APPEND);
 $sql_det_factura = mysqli_query($link, $sql_query);
 
 // Log para debug - ver cuántos productos se encontraron
 $num_productos = mysqli_num_rows($sql_det_factura);
 error_log("Número de productos en la consulta: " . $num_productos);
-file_put_contents($logFile, "Número de productos encontrados: $num_productos\n", FILE_APPEND);
+@file_put_contents($logFile, "Número de productos encontrados: $num_productos\n", FILE_APPEND);
 
 // Si no hay productos, intentar con otras posibles estructuras de columnas
 if ($num_productos == 0) {
@@ -92,7 +104,44 @@ if ($num_productos == 0) {
 // Los datos a enviar al servicio externo
 
 $compa="1";
-$consecutivo=$row_factura['id_factura'];
+// Usar codigo_factura en lugar de id_factura para respetar los rangos de resolución
+$consecutivo=$row_factura['codigo_factura'];
+
+// Si es factura electrónica, forzar el consecutivo al último emitido de tipo 2 y al inicio de rango
+if ($row_factura['tipo_factura'] == 2) {
+    // Último consecutivo FE usado
+    $sql_ultimafe = mysqli_query($link, "SELECT codigo_factura FROM tbl_factura WHERE tipo_factura=2 ORDER BY codigo_factura DESC LIMIT 1");
+    $fila_ultimafe = $sql_ultimafe ? mysqli_fetch_array($sql_ultimafe) : null;
+    if ($fila_ultimafe && !empty($fila_ultimafe['codigo_factura'])) {
+        $consecutivo = $fila_ultimafe['codigo_factura'];
+    }
+
+    // Asegurar que el consecutivo no sea inferior al inicio autorizado
+    if (isset($rango_fe['InicioFactura']) && $consecutivo < (int)$rango_fe['InicioFactura']) {
+        $consecutivo = (int)$rango_fe['InicioFactura'];
+    }
+
+    @file_put_contents($logFile, "Consecutivo FE usado: $consecutivo (original factura: " . ($row_factura['codigo_factura'] ?? 'NULL') . ")\n", FILE_APPEND);
+}
+
+// VALIDAR RANGO PARA FACTURA ELECTRÓNICA
+if ($row_factura['tipo_factura'] == 2) {
+    $sql_rango_fe = mysqli_query($link, "SELECT * FROM tbl_rangofactura_electronica ORDER BY id_rango DESC LIMIT 1");
+    $rango_fe = mysqli_fetch_array($sql_rango_fe);
+    
+    if (!$rango_fe || $consecutivo < $rango_fe['InicioFactura'] || $consecutivo > $rango_fe['FinalFactura']) {
+        http_response_code(400);
+        echo json_encode([
+            "success" => false,
+            "message" => "Error: Número de factura fuera de rango autorizado. Usa insertarfacturaElectronica en lugar de insertarfactura",
+            "consecutivo_enviado" => $consecutivo,
+            "rango_esperado" => "De " . ($rango_fe['InicioFactura'] ?? 'NULL') . " a " . ($rango_fe['FinalFactura'] ?? 'NULL'),
+            "step" => "validation_rango_fe"
+        ]);
+        exit;
+    }
+}
+
 $idtercero=$row_factura['cc_cliente'];
 $tercero='cliente';
 $bruto=$row_factura['valor_pago'];
@@ -313,7 +362,7 @@ if ($httpCode === 200) {
     while ($attempt < $maxAttempts) {
         $attempt++;
         error_log("Intento envío DIAN #" . $attempt);
-        file_put_contents($logFile, "Intento envio DIAN #$attempt\n", FILE_APPEND);
+        @file_put_contents($logFile, "Intento envio DIAN #$attempt\n", FILE_APPEND);
 
         $ch = curl_init($externalUrldian);
         // Configurar la solicitud cURL
@@ -331,7 +380,7 @@ if ($httpCode === 200) {
         if ($curlErrNo) {
             $lastCurlError = $curlErr;
             error_log("cURL error intento $attempt: $curlErr");
-            file_put_contents($logFile, "cURL error intento $attempt: $curlErr\n", FILE_APPEND);
+            @file_put_contents($logFile, "cURL error intento $attempt: $curlErr\n", FILE_APPEND);
             curl_close($ch);
             if ($attempt < $maxAttempts) {
                 sleep(pow(2, $attempt)); // backoff
@@ -355,7 +404,7 @@ if ($httpCode === 200) {
 
         // Si no fue exitoso y quedan intentos, esperar y reintentar
         error_log("HTTP Code DIAN intento $attempt: $httpCodeDian");
-        file_put_contents($logFile, "HTTP Code DIAN intento $attempt: $httpCodeDian\n", FILE_APPEND);
+        @file_put_contents($logFile, "HTTP Code DIAN intento $attempt: $httpCodeDian\n", FILE_APPEND);
         curl_close($ch);
         if ($attempt < $maxAttempts) {
             sleep(pow(2, $attempt));
