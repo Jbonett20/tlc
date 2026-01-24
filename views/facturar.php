@@ -901,7 +901,7 @@
         <!-- fin ventana modal de productos -->
     </uib-tab>
     <!-- --------------------- SEGUNDO TAP  -->
-    <uib-tab index="1">
+    <uib-tab index="1" ng-click="FacturaLista();FacturaListaElectronicas()">
         <uib-tab-heading>
             <i class="material-icons">
                 format_list_bulleted
@@ -991,7 +991,7 @@
         </div>
     </div>
 </div>
-        <div class="col-md-12" ng-show="fromVisibility">
+        <div class="col-md-12" ng-show="fromVisibility" ng-init="FacturaLista();FacturaListaElectronicas();cargarPaginaElectronicas(1)">
             <div class="card ">
                 <div class="card-header card-header-rose card-header-text">
                     <!-- jar -->
@@ -1019,25 +1019,25 @@
                                 </div>
                             </div>
                             <div class="col-md-12 paginacion">
-                                <uib-pagination class="pagination-mod" total-items="filterfacturXfechaRango.length" max-size="5" class="pagination-sm" boundary-links="true" ng-model="pagelistadofacturasXfechasDos" ng-change="paginalistadofacturasXfechasDos()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page=10></uib-pagination>
+                                <uib-pagination class="pagination-mod" total-items="(listadofacturasXfechasDos | filter : filtroProductoIngresofac | filter:{tipo_factura:1}).length" max-size="5" class="pagination-sm" boundary-links="true" ng-model="pagelistadofacturasXfechasDos" ng-change="paginalistadofacturasXfechasDos()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page=10></uib-pagination>
                             </div>
                         </div>
-                        <!-- buscador factura credito -->
+                        <!-- buscador factura electronica -->
                         <div class="head-buscador col-md-6">
                             <div class="col-md-12">
                                 <div class="container-3">
                                     <span class="icon"><i class="material-icons">search</i></span>
-                                    <input type="search" placeholder="Facturas Creditos" id="search" name="id_producto" ng-model="filtroLiistaPl" ng-keypress="buscarCreditoporcodigo(e,filtroLiistaPl)">
+                                    <input type="search" placeholder="Facturas electrónicas" id="search" name="id_producto" ng-model="filtroFacturaElectronica" ng-keypress="FacturaxCodigoElectronica(e,filtroFacturaElectronica)">
                                 </div>
                             </div>
                             <div class="col-md-12 paginacion">
-                                <uib-pagination class="pagination-mod" total-items="filterRangoFechasPl.length" max-size="5" class="pagination-sm" boundary-links="true" ng-model="pageListaPlanesDados" ng-change="paginaListaPlanesDados()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page=10></uib-pagination>
+                                <uib-pagination class="pagination-mod" total-items="totalReportesElectronicas" max-size="5" class="pagination-sm" boundary-links="true" ng-model="pageReporteElectronicas" ng-change="cargarPaginaElectronicas(pageReporteElectronicas)" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page="itemsPerPage"></uib-pagination>
                             </div>
                         </div>
                     </div>
-                    <!-- buscador factura credito -->
+                    <!-- buscador factura electronica -->
                 </div>
-                <div class="row">
+                <div class="row" ng-init="FacturaLista();FacturaListaElectronicas()">
                     <div class="col-md-6">
                         <div class="table-responsive">
                             <table class="table table-hover ">
@@ -1053,7 +1053,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="tbl-normal">
-                                    <tr ng-repeat="listado in filterfacturXfechaRango = (listadofacturasXfechasDos | filter : filtroProductoIngresofac )|  limitTo:10:10*(pagelistadofacturasXfechasDos-1)">
+                                    <tr ng-repeat="listado in filterfacturXfechaRango = (listadofacturasXfechasDos | filter : filtroProductoIngresofac | filter:{tipo_factura:1})|  limitTo:10:10*(pagelistadofacturasXfechasDos-1)">
                                         <td>
                                             <div class="card-avatar" align="center">
                                                 <!-- <a href="#pablo"> -->
@@ -1082,18 +1082,16 @@
                                 <thead>
                                     <tr class="t-completa">
                                         <th>Vend</th>
-                                        <th>Cod. Cred</th>
-                                        <!-- <th>Ident</th> -->
+                                        <th>Cod Fac</th>
+                                        <th>Ident</th>
                                         <th>Nombres</th>
                                         <th style="font-size: 10">Fecha</th>
-                                        <th>Tot/Deu</th>
-                                        <th>Estado</th>
+                                        <th>Hora</th>
                                         <th class="text-cen-table">Ope</th>
                                     </tr>
                                 </thead>
                                 <tbody class="tbl-normal">
-                                    <!-- <tr ng-repeat="listado in filterfacturXfechaRango = (ListaPlanesDados | filter : filtroProductoIngreso)"> -->
-                                    <tr ng-repeat="listado in filterRangoFechasPl = (ListaPlanesDados | filter : filtroLiistaPl | filter: filtroLiistaPl2 |  orderBy:'-') | limitTo:10:10*(pageListaPlanesDados-1) track by $index">
+                                    <tr ng-repeat="listado in itemsReporteElectronicas track by $index">
                                         <td>
                                             <div class="card-avatar" align="center">
                                                 <!-- <a href="#pablo"> -->
@@ -1101,22 +1099,16 @@
                                                 <!-- </a> -->
                                             </div>
                                         </td>
-                                        <td>{{listado.codigoCredito}}</td>
-                                        <!-- <td>{{listado.cc_cliente}}</td> -->
+                                        <td>{{listado.codigo_factura}}</td>
+                                        <td>{{listado.cc_cliente}}</td>
                                         <td>{{listado.nombre_cliente}}</td>
-                                        <td>
-                                            <FONT SIZE=2>{{listado.fecha_inicio}}<br>{{listado.fecha_fin}}</FONT>
-                                        </td>
-                                        <td>${{listado.total_pagosepare | number:0}}/<br>${{listado.descuento_abonos | number:0}}</td>
-                                        <td>{{listado.estado}}/<br>{{listado.estadocredito}}</td>
+                                        <td>{{listado.fecha_factura}}</td>
+                                        <td>{{listado.hora}}</td>
                                         <td class="text-cen-table">
-                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-detallePagos_planSeare" title="Detalle Credito" ng-click="verdetalleCredito(listado.id_credito,listado.id_cliente)"><i class="material-icons">details</i></button>
-                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_cuotas_listaPlansepare" title="Abonos" ng-click="cuotas_listacredito(listado.descuento_abonos,listado.id_credito,listado.id_cliente,listado.cc_cliente,listado.nombre_cliente,cuotas_credito)"><i class="material-icons">receipt</i>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-warning btn-sm" title="Ticket" ng-click="generarfacturaCreditoWord(listado.id_credito)"><i class="material-icons">print</i></button>
-                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-ConfirmEliminacionPlansepare" title="Eliminar" ng-click="Confirmaeliminar_ProductoCreditoreXfechas(listado.id_credito,listado.id_cliente,listado.fecha_inicio,listado.fecha_fin,listado.estadoproductos,confirmaeliminacionPlan)"><i class="material-icons">delete_forever</i></button>
+                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-vistafactudetalle" title="Detalle Factura" ng-click="verdetalleFacturaSelect(listado.id_factura)"><i class="material-icons">details</i></button>
+                                            <button type="button" class="btn btn-success btn-sm" ng-click="generarfactura(listado.id_factura)"><i class="material-icons" title="Factura">receipt</i></button>
+                                            <button type="button" title="Ticket" class="btn btn-warning btn-sm" ng-click="generarfacturaWord(listado.id_factura)"><i class="material-icons">print</i></button>
+                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModaDevolucion" title="Eliminar" ng-click="DevolucionTotal(listado.id_factura,listado.codigo_factura,listado.cc_cliente,listado.nombre_cliente,listado.fecha_factura)"><i class="material-icons">delete_forever</i></button>
                                         </td>
                                         </td>
                                     </tr>
@@ -2007,7 +1999,7 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab index="4">
+      <uib-tab index="4">
         <uib-tab-heading>
             <i class="material-icons">assessment</i>
             Reporte Facturas
@@ -2195,6 +2187,8 @@
             </div>
         </div>
     </uib-tab>
+
+
     <uib-tab index="5">
         <uib-tab-heading>
             <i class="material-icons">format_list_bulleted</i>

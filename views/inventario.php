@@ -33,17 +33,15 @@
                 </div>
                 <div class="card-body card-b-l">
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                        <table id="tablaInventarioGeneral" class="table table-hover table-striped">
+                            <thead class="thead-rose">
                                 <tr class="t-completa">
                                     <th>Cod.Producto</th>
                                     <th>Nombre</th>
                                     <th style="width:20px;">Caja</th>
                                     <th style="width:20px;">Und</th>
-                                    <th style="width:80px;">Dif U</th> 
-                                    <th style="width:80px;">Dif F</th>
-                                    <th>Valor </th>
-                                    <th>Venta </th>
+                                    <th>Valor</th>
+                                    <th>Venta</th>
                                     <th>Valor U</th>
                                     <th>Opciones</th>
                                 </tr>
@@ -51,9 +49,6 @@
                             <tbody class="tbl-normal tbl-fixed">
                                 <tr ng-repeat="listadoInventario in filterInventario = (listadodetodos_inventariioList | filter : filtroInventarioList) | limitTo:100:100*(pagelistadodetodos_inventariioList-1)" ng-class="{'table-danger': listadoInventario.stockMinimo==listadoInventario.Unidad}">
                                     <td>
-                                        <div align="center">{{listadoInventario.codigo_barras}}</div>
-                                        <div align="center">{{listadoInventario.codigo_barrasUno}}</div>
-                                        <div align="center">{{listadoInventario.codigo_barrasDos}}</div>
                                         <div align="center">{{listadoInventario.codigo_producto}}</div>
                                     </td>
                                     <td>{{listadoInventario.descripcion}} {{listadoInventario.presentacion}}</td>
@@ -68,12 +63,6 @@
                                         <div align="center">
                                             <input type="text" name="cantidadF" ng-keypress="ajusteInventario(e,listadoInventario.Unidad,listadoInventario.stock,listadoInventario.id_inventario,listadoInventario.fraccion)" class="form-control input-sm" ng-if="listadoInventario.fraccion!=0" ng-model="listadoInventario.stock">
                                         </div>
-                                    </td>
-                                    <td style="width:80px;">
-                                        <div align="center"> {{listadoInventario.diferenciaU}} </div>
-                                    </td>
-                                    <td style="width:80px;">
-                                        <div ng-if="listadoInventario.fraccion!=0" align="center">{{listadoInventario.diferenciaF}} </div>
                                     </td>
                                     <td>$ {{listadoInventario.valor | number:0}}</td>
                                     <td>$ {{listadoInventario.valor_venta | number:0}}</td>
@@ -677,6 +666,83 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    <uib-tab index="6" select="cargarInventarioGeneral()">
+        <uib-tab-heading>
+            <i class="material-icons">list_alt</i>Inventario por Productos General
+        </uib-tab-heading>
+        <div class="row">
+            <div class="card">
+                <div class="card-header card-header-rose card-header-icon">
+                    <div class="row head-buscador">
+                        <div class="col-md-4">
+                            <div class="container-3">
+                                <span class="icon"><i class="material-icons">search</i></span>
+                                <input type="search" placeholder="Buscar producto..." id="searchGeneral" ng-model="filtroInventarioGeneral" autofocus autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-control" ng-model="itemsPorPagina" ng-change="cambiarItemsPorPagina()">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success" ng-click="exportarExcelInventarioGeneral()" title="Exportar a Excel">
+                                <i class="material-icons">description</i> Excel
+                            </button>
+                        </div>
+                        <div class="col-md-3 paginacion">
+                            <uib-pagination class="pagination-mod" total-items="(filterInventarioGeneral || []).length" max-size="5" boundary-links="true" ng-model="pageInventarioGeneral" ng-change="cargarPaginaInventarioGeneral()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page="itemsPorPagina"></uib-pagination>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body card-b-l">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tablaInventarioGeneral">
+                            <thead class="thead-rose">
+                                <tr class="t-completa">
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th class="text-center">Unidad</th>
+                                    <th class="text-center">Stock</th>
+                                    <th class="text-right">Valor</th>
+                                    <th class="text-right">Valor Venta</th>
+                                    <th class="text-right">Valor Unidad</th>
+                                    <th class="text-right">Total Inventario</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbl-normal">
+                                <tr ng-repeat="item in filterInventarioGeneral = (inventarioGeneralList | filter : filtroInventarioGeneral) | limitTo:itemsPorPagina:itemsPorPagina*(pageInventarioGeneral-1)">
+                                    <td>{{item.codigo_producto}}</td>
+                                    <td>{{item.descripcion}}</td>
+                                    <td class="text-center">{{item.Unidad}}</td>
+                                    <td class="text-center">{{item.stock}}</td>
+                                    <td class="text-right">${{item.valor | number:0}}</td>
+                                    <td class="text-right">${{item.valor_venta | number:0}}</td>
+                                    <td class="text-right">${{item.valor_unidad | number:0}}</td>
+                                    <td class="text-right">${{(item.Unidad * item.valor + item.stock * item.valor_unidad) | number:0}}</td>
+                                </tr>
+                                <tr ng-if="filterInventarioGeneral.length == 0">
+                                    <td colspan="8" class="text-center">No hay datos disponibles</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <th colspan="8" class="text-right"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <p>Mostrando {{(filterInventarioGeneral || []).length > 0 ? ((pageInventarioGeneral-1)*itemsPorPagina + 1) : 0}} a {{(pageInventarioGeneral*itemsPorPagina) > (filterInventarioGeneral || []).length ? (filterInventarioGeneral || []).length : (pageInventarioGeneral*itemsPorPagina)}} de {{(filterInventarioGeneral || []).length}} registros</p>
                     </div>
                 </div>
             </div>
