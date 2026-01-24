@@ -1263,6 +1263,65 @@ new PNotify({
 		window.open('views/informespdf/reporteInventarioporRangofecha.php','_blank');
 	}
 
+	// =============================== INVENTARIO GENERAL POR PRODUCTOS ==========================
+	$scope.inventarioGeneralList = [];
+	$scope.pageInventarioGeneral = 1;
+	$scope.itemsPorPagina = 10;
+	$scope.filtroInventarioGeneral = '';
+	$scope.filterInventarioGeneral = [];
+
+	$scope.cargarInventarioGeneral = function() {
+		$http.get('app/operaciones/inventario_general.php?operacion=listar')
+		.success(function(datos) {
+			if (datos.error) {
+				new PNotify({
+					title: 'Error!',
+					text: datos.error,
+					type: 'error',
+					styling: 'bootstrap3'
+				});
+			} else {
+				$scope.inventarioGeneralList = Array.isArray(datos) ? datos : [];
+				$scope.pageInventarioGeneral = 1;
+			}
+		})
+		.error(function(datos, status) {
+			new PNotify({
+				title: 'Error!',
+				text: 'Error al cargar el inventario general',
+				type: 'error',
+				styling: 'bootstrap3'
+			});
+		});
+	};
+
+	$scope.cambiarItemsPorPagina = function() {
+		$scope.pageInventarioGeneral = 1;
+	};
+
+	$scope.calcularTotalInventario = function() {
+		if (!$scope.filterInventarioGeneral || $scope.filterInventarioGeneral.length === 0) {
+			return 0;
+		}
+		var total = 0;
+		for (var i = 0; i < $scope.filterInventarioGeneral.length; i++) {
+			var item = $scope.filterInventarioGeneral[i];
+			total += (item.Unidad * item.valor) + (item.stock * item.valor_unidad);
+		}
+		return total;
+	};
+
+	$scope.exportarExcelInventarioGeneral = function() {
+		window.open('app/operaciones/inventario_general.php?operacion=exportar', '_blank');
+	};
+
+	$scope.cargarPaginaInventarioGeneral = function() {
+		// Esta función se llama automáticamente cuando cambia la página
+	};
+
+	$scope.cargarInventarioGeneral();
+	// =============================== FIN INVENTARIO GENERAL ==========================
+
 	//==================== TODO LO REFERENTE A FACTURAR ======================
 
 	// ------------------- crear nuevo plansepare ---------------
@@ -6600,6 +6659,8 @@ $scope.agregarbusquedaFacturaXf={
 	}
 	$scope.visibleDate=false;
 	$scope.visibleDateDos=false;
+	$scope.listadofacturasElectronicas = [];
+	$scope.pageListaPlanesDados = 1;
 	$scope.FacturaLista= function()
 	{
 
@@ -6758,6 +6819,28 @@ $scope.FacturaxCodigo = function(elEvento,busquedadFactura)
 					styling: 'bootstrap3'
 				});*/
 	    });
+
+	}
+	$scope.FacturaListaElectronicas= function()
+	{
+		$scope.searchReporte = '';
+		$scope.pageReporteElectronicas = 1;
+		$scope.cargarPaginaElectronicas(1);
+	}
+}
+	$scope.FacturaxCodigoElectronica = function(elEvento,busquedadFactura)
+	{
+
+		elEvento,
+		 evento = elEvento || window.event;
+         k=evento.keyCode; //número de código de la tecla. para el enter debe ser 13
+         
+        if (k == 13)
+        {
+	
+		$scope.searchReporte = busquedadFactura || '';
+		$scope.pageReporteElectronicas = 1;
+		$scope.cargarPaginaElectronicas(1);
 
 	}
 }
@@ -6965,6 +7048,7 @@ $scope.FacturaxCodigo = function(elEvento,busquedadFactura)
 					});
 
 $scope.FacturaLista();
+$scope.FacturaListaElectronicas();
 				}
 
 							
@@ -14369,9 +14453,17 @@ $scope.verificarCosas = function(pass,cosas){
 	}else{
 		$scope.fromVisibility=true;
 		$scope.busquedatododinero();
+		$scope.FacturaLista();
+		$scope.FacturaListaElectronicas();
 	}
 
 }
+$scope.$watch('fromVisibility', function(nuevoValor, viejoValor) {
+	if (nuevoValor && !viejoValor) {
+		$scope.FacturaLista();
+		$scope.FacturaListaElectronicas();
+	}
+});
 $scope.fromVisibilityVentaDia=false;
 $scope.verificarpassVentadelDia = function(pass){
 
@@ -14392,13 +14484,44 @@ $scope.verificarpassVentadelDia = function(pass){
 }
 
 // ===== REPORTES DE FACTURAS (Server-side pagination) =====
-$scope.reporteSeleccionado = null;
+
+$scope.reporteSeleccionado = 'normales';
 $scope.searchReporte = '';
 $scope.pageReporteNormales = 1;
 $scope.pageReporteElectronicas = 1;
 $scope.itemsPerPage = 25;
 $scope.totalReportesNormales = 0;
 $scope.totalReportesElectronicas = 0;
+$scope.cargarReporteFacturasNormales = function()
+{
+	$scope.reporteSeleccionado = 'normales';
+	$scope.searchReporte = '';
+	$scope.pageReporteNormales = 1;
+	$scope.cargarPaginaNormales(1);
+	
+	new PNotify({
+		title: 'Cargando...',
+		text: 'Cargando reporte de facturas normales',
+		type: 'info',
+		styling: 'bootstrap3',
+		hide: true
+	});
+}
+
+$scope.cargarReporteFacturasElectronicas = function()
+{
+	$scope.reporteSeleccionado = 'electronicas';
+	$scope.searchReporte = '';
+	$scope.pageReporteElectronicas = 1;
+	$scope.cargarPaginaElectronicas(1);
+	new PNotify({
+		title: 'Cargando...',
+		text: 'Cargando reporte de facturas electrónicas',
+		type: 'info',
+		styling: 'bootstrap3',
+		hide: true
+	});
+}
 
 // Cargar página de facturas normales desde servidor
 $scope.cargarPaginaNormales = function(page) {
@@ -14411,7 +14534,6 @@ $scope.cargarPaginaNormales = function(page) {
 		limit: $scope.itemsPerPage
 	};
 	
-	console.log('Cargando página normales:', params);
 	
 	$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=reporteFacturasNormales", params)
 	.success(function(response) {
@@ -14437,21 +14559,16 @@ $scope.cargarPaginaElectronicas = function(page) {
 		limit: $scope.itemsPerPage
 	};
 	
-	console.log('Cargando página electronicas:', params);
-	
 	$http.post("app/operaciones/operaciones.php?variable=facturar&operacion=reporteFacturasElectronicas", params)
 	.success(function(response) {
-		console.log('Respuesta página electronicas:', response);
 		$scope.itemsReporteElectronicas = response.data || [];
 		$scope.totalReportesElectronicas = response.total || 0;
 		$scope.maxPaginasElectronicas = Math.ceil($scope.totalReportesElectronicas / $scope.itemsPerPage);
 	})
 	.error(function(data, status) {
-		console.log('Error cargando página electronicas:', data, status);
 		$scope.itemsReporteElectronicas = [];
 	});
 };
-
 // Watch para búsqueda - vuelve a página 1 cuando cambia
 $scope.$watch('searchReporte', function(newVal, oldVal) {
 	if (newVal !== oldVal) {
@@ -14532,36 +14649,7 @@ $scope.exportarExcel = function(tipo) {
 	});
 };
 
-$scope.cargarReporteFacturasNormales = function()
-{
-	$scope.reporteSeleccionado = 'normales';
-	$scope.searchReporte = '';
-	$scope.pageReporteNormales = 1;
-	$scope.cargarPaginaNormales(1);
-	
-	new PNotify({
-		title: 'Cargando...',
-		text: 'Cargando reporte de facturas normales',
-		type: 'info',
-		styling: 'bootstrap3',
-		hide: true
-	});
-}
 
-$scope.cargarReporteFacturasElectronicas = function()
-{
-	$scope.reporteSeleccionado = 'electronicas';
-	$scope.searchReporte = '';
-	$scope.pageReporteElectronicas = 1;
-	$scope.cargarPaginaElectronicas(1);
-	
-	new PNotify({
-		title: 'Cargando...',
-		text: 'Cargando reporte de facturas electrónicas',
-		type: 'info',
-		styling: 'bootstrap3',
-		hide: true
-	});
-}
+
 
 }]);

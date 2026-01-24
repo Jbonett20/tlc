@@ -344,7 +344,7 @@ session_start();
         <!-- app donde esta el modulo de angular -->
         <script src="js/app.js"></script>
         <!-- controlador -->
-        <script src="js/controlador.js" ></script>
+        <script src="js/controlador.js?v=20260124" ></script>
         <!-- <script src="js/angular-pagination.js" ></script> -->
         <!--   Core JS Files   -->
         <script src="js/services.js"></script>

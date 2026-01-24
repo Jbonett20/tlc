@@ -1506,7 +1506,7 @@ if ($variable == 'ingresos') {
 		$fecha_inicio = $datos['fecha_inicio'];
 		$fecha_fin = $datos['fecha_fin'];
 
-		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and  f.fecha_factura>='$fecha_inicio'  and f.fecha_factura<='$fecha_fin'  order by fecha_factura ASC");
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,f.tipo_factura FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and  f.fecha_factura>='$fecha_inicio'  and f.fecha_factura<='$fecha_fin'  order by fecha_factura ASC");
 
 		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
 			echo "nohay";
@@ -1526,7 +1526,7 @@ if ($variable == 'ingresos') {
 		$fecha_inicio = $datos['fecha_inicio'];
 
 
-		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente  and  f.fecha_factura='$fecha_inicio'  order by fecha_factura ASC");
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,f.tipo_factura FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and  f.fecha_factura='$fecha_inicio'  order by fecha_factura ASC");
 
 		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
 			echo "nohay";
@@ -1627,7 +1627,26 @@ if ($variable == 'ingresos') {
 		$codigo = $datos['codigo'];
 
 
-		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and f.codigo_factura='$codigo' order by fecha_factura ASC");
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,f.tipo_factura FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and f.codigo_factura LIKE '%$codigo%' and CAST(f.tipo_factura AS UNSIGNED)=1 order by fecha_factura ASC");
+
+		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
+			echo "nohay";
+		} else {
+			$rows = [];
+			while ($respuesta = mysqli_fetch_assoc($sql_listado_facturaxfecha)) {
+				$rows[] = $respuesta;
+			}
+
+			echo $rows = json_encode($rows);
+			mysqli_close($link);
+		}
+	} else if ($operacion == 'facturacodigoElectronica') {
+		$requestBody = file_get_contents("php://input");
+		$datos = json_decode($requestBody, true);
+
+		$codigo = $datos['codigo'];
+
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.*,IFNULL(cli.cc_cliente,'') as cc_cliente,IFNULL(cli.nombre_cliente,'') as nombre_cliente,IFNULL(us.img,'') as img FROM tbl_factura f LEFT JOIN tbl_cliente cli ON f.id_cliente=cli.id_cliente LEFT JOIN tbl_usuario_sistema us ON us.id_usuariosistema=f.id_vendedor WHERE f.codigo_factura LIKE '%$codigo%' and (CAST(f.tipo_factura AS UNSIGNED)=2 OR TRIM(IFNULL(f.tipo_factura,''))='2') order by f.fecha_factura ASC");
 
 		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
 			echo "nohay";
@@ -1644,7 +1663,22 @@ if ($variable == 'ingresos') {
 
 
 
-		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor  order by codigo_factura DESC LIMIT 100");
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT us.*,f.hora,f.id_factura,f.codigo_factura,f.fecha_factura,f.valor_pago,cli.cc_cliente,cli.nombre_cliente,f.tipo_factura FROM tbl_factura f, tbl_empresa em, tbl_cliente cli, tbl_usuario_sistema us WHERE f.id_empresa=em.id_empresa and f.id_cliente=cli.id_cliente and us.id_usuariosistema=f.id_vendedor and CAST(f.tipo_factura AS UNSIGNED)=1 order by codigo_factura DESC LIMIT 100");
+
+		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
+			echo "nohay";
+		} else {
+			$rows = [];
+			while ($respuesta = mysqli_fetch_assoc($sql_listado_facturaxfecha)) {
+				$rows[] = $respuesta;
+			}
+
+			echo $rows = json_encode($rows);
+			mysqli_close($link);
+		}
+	} else if ($operacion == 'facturaListaDatElectronicas') {
+
+		$sql_listado_facturaxfecha = mysqli_query($link,"SELECT f.*,IFNULL(cli.cc_cliente,'') as cc_cliente,IFNULL(cli.nombre_cliente,'') as nombre_cliente,IFNULL(us.img,'') as img FROM tbl_factura f LEFT JOIN tbl_cliente cli ON f.id_cliente=cli.id_cliente LEFT JOIN tbl_usuario_sistema us ON us.id_usuariosistema=f.id_vendedor WHERE (CAST(f.tipo_factura AS UNSIGNED)=2 OR TRIM(IFNULL(f.tipo_factura,''))='2') order by f.codigo_factura DESC LIMIT 100");
 
 		if (mysqli_num_rows($sql_listado_facturaxfecha) == 0) {
 			echo "nohay";
@@ -2462,7 +2496,7 @@ if ($variable == 'ingresos') {
 		echo $rows = json_encode($rows);
 		mysqli_close($link);
 	}
-	else if ($operacion == 'reporteFacturasNormales') {
+		else if ($operacion == 'reporteFacturasNormales') {
 		// Recibir parámetros del cliente
 		$requestBody = file_get_contents("php://input");
 		$params = json_decode($requestBody, true);
@@ -2623,6 +2657,7 @@ if ($variable == 'ingresos') {
 			'limit' => $limit
 		]);
 		mysqli_close($link);
+
 	}
 } else if ($variable == 'inventario') {
 	if ($operacion == 'inventarioXprodcito') {
@@ -3815,7 +3850,7 @@ else if ($variable == "credito") {
 
 
 
-		$sql_listadocreditos = mysqli_query($link,"SELECT us.*,pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c,tbl_usuario_sistema us WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and us.id_usuariosistema=pla.id_vendedor GROUP by pla.id_credito ");
+		$sql_listadocreditos = mysqli_query($link,"SELECT '' as img,pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria GROUP by pla.id_credito ");
 
 
 		$rows = [];
@@ -3867,7 +3902,7 @@ else if ($variable == "credito") {
 		$codigoCredito = $datos['codigoCredito'];
 
 
-		$sql_listadocreditos = mysqli_query($link,"SELECT us.*,pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c,tbl_usuario_sistema us WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and  us.id_usuariosistema=pla.id_vendedor and pla.codigoCredito='$codigoCredito' GROUP by pla.id_credito");
+		$sql_listadocreditos = mysqli_query($link,"SELECT '' as img,pla.codigoCredito,pla.estadoproductos,pla.estadoproductos as estadoPrEntregados,pla.id_credito,cl.id_cliente,pla.valor_aumeto,pla.estadoproductos,pla.total_pagosepare,pla.descuento_abonos,pla.fecha_inicio,pla.fecha_fin,pr.codigo_producto,pr.descripcion,pr.valor,pr.valor_venta,c.nombre_categoria,cl.cc_cliente,cl.nombre_cliente,pla.descuento_abonos as estado,pla.descuento_abonos as vencido,current_date() as fechaactual,pla.fecha_fin as estadocredito FROM tbl_credito pla, tbl_detalle_credito dpl, tbl_cliente cl, tbl_producto pr, tbl_categoria c WHERE pla.id_cliente=cl.id_cliente and dpl.id_credito=pla.id_credito and dpl.id_producto=pr.id_producto and pr.id_categoria=c.id_categoria and pla.codigoCredito='$codigoCredito' GROUP by pla.id_credito");
 
 
 		$rows = [];

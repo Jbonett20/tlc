@@ -566,11 +566,16 @@ table>.tbl-normal>tr>td{
 }
 
 .pagination-mod>li.active>a{
-    background-color: #9c27b0;
-    border-color: #9c27b0;
-    color: #fff;
-    box-shadow: 0 4px 5px 0 rgba(156,39,176,.14), 0 1px 10px 0 rgba(156,39,176,.12), 0 2px 4px -1px rgba(156,39,176,.2);
+  background-color: #e91e63;
+  border-color: #e91e63;
+  color: #fff;
+  box-shadow: 0 4px 5px 0 rgba(233,30,99,.14), 0 1px 10px 0 rgba(233,30,99,.12), 0 2px 4px -1px rgba(233,30,99,.2);
 
+}
+.pagination-mod>li>a:hover{
+  background-color: #e91e63;
+  border-color: #e91e63;
+  color: #fff;
 }
 
 .ta_modal{
@@ -650,6 +655,78 @@ tbody{
 }
 .t-completa{
   border-top:1px solid #dddddd;
+}
+.thead-rose th{
+  background-color: #e91e63;
+  color: #fff;
+  border-color: #e91e63;
+}
+
+#tablaInventarioGeneral{
+  border-collapse: collapse;
+  font-size: 13px;
+}
+#tablaInventarioGeneral thead th{
+  background-color: #e91e63;
+  color: #fff;
+  border-color: #e91e63;
+  font-weight: 600;
+  letter-spacing: .2px;
+  padding: 10px 8px;
+}
+#tablaInventarioGeneral th,
+#tablaInventarioGeneral td{
+  border: 1px solid #f3c0d3;
+  vertical-align: middle;
+  padding: 10px 8px;
+}
+#tablaInventarioGeneral tbody{
+  text-transform: none;
+}
+#tablaInventarioGeneral tbody tr:nth-child(even){
+  background-color: #f8f8f8;
+}
+#tablaInventarioGeneral tbody tr:hover{
+  background-color: #f3f3f3;
+}
+#tablaInventarioGeneral tbody tr.table-danger,
+#tablaInventarioGeneral tbody tr.table-danger:hover{
+  background-color: #f7b2b2;
+}
+#tablaInventarioGeneral td:nth-child(1),
+#tablaInventarioGeneral td:nth-child(3),
+#tablaInventarioGeneral td:nth-child(4),
+#tablaInventarioGeneral td:nth-child(5),
+#tablaInventarioGeneral td:nth-child(6),
+#tablaInventarioGeneral td:nth-child(7){
+  text-align: center;
+}
+#tablaInventarioGeneral td:nth-child(8){
+  text-align: center;
+}
+#tablaInventarioGeneral .btn.btn-warning{
+  background-color: #ff9800;
+  border-color: #ff9800;
+  box-shadow: none;
+}
+#tablaInventarioGeneral .btn.btn-warning i{
+  color: #fff;
+}
+#tablaInventarioGeneral th:first-child,
+#tablaInventarioGeneral td:first-child{
+  padding-left: 14px;
+}
+#tablaInventarioGeneral th.text-right,
+#tablaInventarioGeneral td.text-right{
+  padding-right: 14px;
+}
+#tablaInventarioGeneral tfoot tr.table-info{
+  background-color: #e91e63;
+}
+#tablaInventarioGeneral tfoot tr.table-info th{
+  background-color: #e91e63;
+  border-color: #e91e63;
+  padding: 6px 0;
 }
 .cambiob{
   margin:0 !important;
