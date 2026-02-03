@@ -40,6 +40,8 @@
                                     <th>Nombre</th>
                                     <th style="width:20px;">Caja</th>
                                     <th style="width:20px;">Und</th>
+                                      <th style="width:20px;">Dif U</th> 
+                                    <th style="width:20px;">Dif F</th>
                                     <th>Valor</th>
                                     <th>Venta</th>
                                     <th>Valor U</th>
@@ -63,6 +65,12 @@
                                         <div align="center">
                                             <input type="text" name="cantidadF" ng-keypress="ajusteInventario(e,listadoInventario.Unidad,listadoInventario.stock,listadoInventario.id_inventario,listadoInventario.fraccion)" class="form-control input-sm" ng-if="listadoInventario.fraccion!=0" ng-model="listadoInventario.stock">
                                         </div>
+                                        <td style="width:80px;">
+                                        <div align="center"> {{listadoInventario.diferenciaU}} </div>
+                                    </td>
+                                    <td style="width:80px;">
+                                        <div ng-if="listadoInventario.fraccion!=0" align="center">{{listadoInventario.diferenciaF}} </div>
+                                    </td>
                                     </td>
                                     <td>$ {{listadoInventario.valor | number:0}}</td>
                                     <td>$ {{listadoInventario.valor_venta | number:0}}</td>
