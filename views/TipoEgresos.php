@@ -1,3 +1,32 @@
+<style>
+	.egreso-toolbar {
+		background: #f8f9fc;
+		border: 1px solid #e3e6f0;
+		border-radius: 6px;
+		padding: 12px 15px;
+		margin: 10px 0 15px 0;
+	}
+	.egreso-badge {
+		background: #e91e63;
+		color: #fff;
+		padding: 2px 8px;
+		border-radius: 10px;
+		font-weight: 600;
+		margin-left: 6px;
+		font-size: 12px;
+	}
+	.egreso-table thead th {
+		background: #f3f4f7;
+		color: #3c4858;
+	}
+	.egreso-table tbody tr:hover {
+		background: #fafafa;
+	}
+	.egreso-label {
+		font-weight: 600;
+		color: #5f6368;
+	}
+</style>
 <uib-tabset active="active" class="col-md-12 tab-normal">
 <uib-tab index="0">
 <uib-tab-heading>
@@ -85,10 +114,8 @@
 		</div>
 		<div class="card-body">
 			<div class="col-md-12">
-				<span style="font-size: font-size: 15px;font-weight: bold;color: red;margin-left: 3%;">{{"Registros Encontrados"}}</span>
-				<span style="font-size: font-size: 15px;font-weight: bold;color: red;margin-left: 3%;">
-					{{listadodetodos_Elista.length}}
-				</span>
+				<span style="font-size: 15px;font-weight: bold;color: #3c4858;margin-left: 3%;">{{"Registros Encontrados"}}</span>
+				<span class="egreso-badge">{{listadodetodos_Elista.length}}</span>
 			</div>
 			<div class="col-md-12">
 				
@@ -98,11 +125,28 @@
 				</div>
 			</div>
 			<div class="col-md-12">
+				<div class="row egreso-toolbar">
+					<div class="col-md-3">
+						<label class="egreso-label">Fecha inicio</label>
+						<input type="date" class="form-control input-sm" ng-model="egresoExport.inicio">
+					</div>
+					<div class="col-md-3">
+						<label class="egreso-label">Fecha fin</label>
+						<input type="date" class="form-control input-sm" ng-model="egresoExport.fin">
+					</div>
+					<div class="col-md-4" style="margin-top: 22px;">
+						<button type="button" class="btn btn-success btn-sm" ng-click="exportarEgresosExcel(egresoExport)">
+							<i class="material-icons">file_download</i> Descargar Excel
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
 				<uib-pagination class="pagination-mod" total-items="filterEgresosLista.length" ng-model="pagelistadodetodos_Elista" ng-change="paginalistadodetodos_Elista()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page=10></uib-pagination>
 			</div>
 			<div class="col-md-12">
 				<div class="table-responsive">
-					<table class="table">
+					<table class="table egreso-table">
 						<thead>
 							<tr>
 								<th>Codigo Egreso</th>
@@ -134,6 +178,9 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<div class="col-md-12">
+			<uib-pagination class="pagination-mod" total-items="filterEgresosLista.length" ng-model="pagelistadodetodos_Elista" ng-change="paginalistadodetodos_Elista()" previous-text="&lsaquo;" next-text="&rsaquo;" items-per-page=10></uib-pagination>
 		</div>
 	</div>
 </div>

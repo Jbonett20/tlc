@@ -6418,7 +6418,7 @@ $scope.agregarbusquedaFacturaXf={
 
 $scope.FacturaLista();
 $scope.imprimir_Egreso= function(id){
-window.open('views/informespdf/BaseFacturaEgreso.php?inicio='+id,'_blank');
+window.open('views/informespdf/BaseFacturaEgreso.php?id='+id,'_blank');
 }
 $scope.sumarvalores= function(){
 
@@ -10008,6 +10008,28 @@ var anno = fecha.getFullYear();
 	}
 
 $scope.listadotodos_EgresoLista();
+$scope.egresoExport = {
+	inicio: '',
+	fin: ''
+};
+
+$scope.exportarEgresosExcel = function(rango){
+	var formatDate = function(value){
+		if (!value) {
+			return '';
+		}
+		if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
+			var y = value.getFullYear();
+			var m = (value.getMonth() + 1).toString().padStart(2, '0');
+			var d = value.getDate().toString().padStart(2, '0');
+			return y + '-' + m + '-' + d;
+		}
+		return value;
+	};
+	var inicio = rango && rango.inicio ? formatDate(rango.inicio) : '';
+	var fin = rango && rango.fin ? formatDate(rango.fin) : '';
+	window.open('app/operaciones/egresos_export.php?inicio=' + encodeURIComponent(inicio) + '&fin=' + encodeURIComponent(fin), '_blank');
+}
 $scope.listadotodos_Egresos  = function ()
 	{
 		// console.log(insertIngresos);

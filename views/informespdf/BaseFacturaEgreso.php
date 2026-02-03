@@ -4,6 +4,8 @@ require_once __DIR__ . '/pdf/vendor/autoload.php';
 require_once '../../app/conexion.php';
 use Mpdf\Mpdf;
 extract($_REQUEST);
+$id = isset($id) ? $id : null;
+$descuentoGeneral = isset($descuentoGeneral) ? (float)$descuentoGeneral : 0;
 $sql_empresa = mysqli_query($link,"SELECT * FROM tbl_empresa");
 $filaempresa = mysqli_fetch_array($sql_empresa);
 $telefono = $filaempresa['telefono'];
@@ -12,15 +14,15 @@ ini_set('date.timezone','America/Bogota');
     $hoy =date("d-m-Y h:i:s",time());
 
 sleep(1);
-$sqlinventariogeneral =  mysqli_query($link,"SELECT * FROM tbl_empresa");
+$sql_egreso = mysqli_query($link,"SELECT e.*, te.codigo_egreso, te.nombreTipo, te.concepto FROM tbl_egresos e INNER JOIN tbl_tipoegreso te ON e.id_tipoEgreso=te.id_tipoEgreso WHERE e.id_egreso='$id'");
 
-      if (mysqli_num_rows($sqlinventariogeneral) == 0)
+      if (mysqli_num_rows($sql_egreso) == 0)
       {
         $variable_html.='No se encontraron resultados';
       }
       else
       {
-         $respuesta = mysqli_fetch_array($sqlinventariogeneral);
+         $egreso = mysqli_fetch_assoc($sql_egreso);
         
 $titulo='<div class="titulo">
   
@@ -40,56 +42,33 @@ $variable_html = '
   </head>
   <body >
     <h3 class="tmedia">
-   '.$respuesta['nombre_empresa'].'</h3><h4 class="tmedia"><br>Nit: '.$respuesta['nit_empresa'].'<br>
+   '.$filaempresa['nombre_empresa'].'</h3><h4 class="tmedia"><br>Nit: '.$filaempresa['nit_empresa'].'<br>
     Iva Regimen Simplificado <br>
-    factura de Venta N '.$respuesta['codigo_factura'].'<br>
-    fecha :'.$respuesta['fecha_factura'].' | '.$respuesta['hora'].'<br>
-    cliente:'.$respuesta['nombre_cliente'].'<br>
-    CC: '.$respuesta['cc_cliente'].' <br>
-    forma de pago: '.$respuesta['tipoPago'].'
+    Recibo de Egreso N '.$egreso['id_egreso'].'<br>
+    fecha :'.$egreso['fecha'].'<br>
+    pagado a: '.$egreso['pagado'].'<br>
+    concepto: '.$egreso['nombreTipo'].'
     </h4>    
   <p>=============================</p>
     <table>
         <tr>
-          <th >PROD.</th>
+          <th >CONCEPTO</th>
+          <th >VALOR</th>
           </tr>
 
          <tr>
               <th >_______</th>
+              <th >_______</th>
              
               </tr>';
-        $sql_detallefactura =  mysqli_query($link,"SELECT * FROM tbl_egresos e tbl_tipoegreso te WHERE e.id_tipoEgreso=te.id_tipoEgreso and e.id_egreso='$id'");
       
-      $totalvalor=0;
-      $ivaV=0;
-        while ($respuestadetalle = mysqli_fetch_assoc($sql_detallefactura))
-        { 
-          
-          $totalvalor=$totalvalor+$respuestadetalle['total_pago'];
-          $ivaVV=$respuestadetalle['total_pago']*$respuestadetalle['iva']/100;
-          $ivaV=$ivaV+$ivaVV;
-              
-
-    $variable_html .= '                 
+      $totalvalor = (float)$egreso['valor'];
+      $ivaV = 0;
+      $variable_html .= '                 
         <tr class="productos">
-          <td colspan="4"><strong>'.$respuestadetalle['descripcion'].'-'.$respuestadetalle['presentacion'].'</strong></td>
-          </tr>
-          <tr>
-         
-          <th>CANT</th>
-          <th>VAL</th>
-          <th>TOT</th>
-        
-        </tr>
-         
-           <tr class="productos">
-          
-          <td align="center"><strong>'.$respuestadetalle['cantidad'].':'.$respuestadetalle['cantidadFraccion'].'</strong></td>
-         
-          <td><strong>$'.number_format($respuestadetalle['valor_venta']).'</strong></td>
-          <td><strong>$'.number_format($respuestadetalle['total_pago']).'</strong></td>
+          <td><strong>'.$egreso['codigo_egreso'].' - '.$egreso['nombreTipo'].'</strong></td>
+          <td><strong>$'.number_format($totalvalor).'</strong></td>
         </tr>';
-      }
       $subtotal=$totalvalor - $ivaV+$descuentoGeneral;
       $totalconDES=$totalvalor;
       $variable_html .= '
@@ -116,11 +95,11 @@ $variable_html = '
     
       <tr>
         <th class="cabecera2">Efectivo</th>
-        <td><strong>$ '.number_format($respuesta['pagoCambio']).'</strong></td>
+        <td><strong>$ '.number_format($totalconDES).'</strong></td>
       </tr>
       <tr>
         <th class="cabecera2">Cambio</th>
-        <td><strong>$ '.number_format($respuesta['cambio']).'</strong></td>
+        <td><strong>$ 0</strong></td>
       </tr>
     </table>
     <p>=============================</p>
