@@ -20,8 +20,14 @@ $usuario = $row["usuario"];
 $usu_llave= $row["llaveusuario"];
 $res= $row["resolucion_desc"];
 $prefijo=$row['prefijo'];
+
+// Datos para envío DIAN (configurables por variables de entorno o BD)
+$nitDian = trim((string)(getenv('FACTIN_NIT') ?: ($row['nit'] ?? $row['nit_empresa'] ?? $row['nitempresa'] ?? '')));
+$claveCertificadoDian = trim((string)(getenv('FACTIN_CLAVE_CERTIFICADO') ?: ($row['clave_certificado'] ?? $row['clavecertificado'] ?? $row['password_certificado'] ?? $row['clave_cert'] ?? '')));
+$softwareIdDian = trim((string)(getenv('FACTIN_SOFTWARE_ID') ?: ($row['software_id'] ?? $row['softwareid'] ?? $row['id_software'] ?? $row['idsoftware'] ?? '')));
+$llaveEnvioDian = trim((string)(getenv('FACTIN_LLAVE_ENVIO') ?: ($row['llave_envio'] ?? $row['llaveenvio'] ?? $row['llave'] ?? '')));
 // URL del servicio externo al que se hará la solicitud
-$externalUrl = "https://www.factin.app:5091/Movimientoapi?llave=" . $llave ."&nuevo=false&bodegg=-&usuario=".$usuario."&tipocosto=promedio&llaveusuario=".$usu_llave;
+$externalUrl = "https://www.factin.app:8443/Movimientoapi?llave=" . $llave ."&nuevo=false&bodegg=-&usuario=".$usuario."&tipocosto=promedio&llaveusuario=".$usu_llave;
 
 
 // Obtener el cuerpo de la solicitud
@@ -74,7 +80,7 @@ if ($row_factura['tipo_factura'] != 2) {
 }
 
 //obtener datos detalle factura
-$sql_query = "SELECT f.*,p.codigo_producto,p.descripcion,i.iva,p.valor_unidad FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='$idFact'";
+$sql_query = "SELECT f.*,p.codigo_producto,p.descripcion,p.presentacion,p.valor,p.valor_unidad,i.iva FROM tbl_detallefactura as f left join tbl_producto as p on p.id_producto=f.id_producto left join tbl_iva as i on i.id_iva=p.id_iva where f.id_factura='$idFact'";
 error_log("SQL Query: " . $sql_query);
 @file_put_contents($logFile, "SQL Query: $sql_query\n", FILE_APPEND);
 $sql_det_factura = mysqli_query($link, $sql_query);
@@ -106,23 +112,7 @@ if ($num_productos == 0) {
 $compa="1";
 // Usar codigo_factura en lugar de id_factura para respetar los rangos de resolución
 $consecutivo=$row_factura['codigo_factura'];
-
-// Si es factura electrónica, forzar el consecutivo al último emitido de tipo 2 y al inicio de rango
-if ($row_factura['tipo_factura'] == 2) {
-    // Último consecutivo FE usado
-    $sql_ultimafe = mysqli_query($link, "SELECT codigo_factura FROM tbl_factura WHERE tipo_factura=2 ORDER BY codigo_factura DESC LIMIT 1");
-    $fila_ultimafe = $sql_ultimafe ? mysqli_fetch_array($sql_ultimafe) : null;
-    if ($fila_ultimafe && !empty($fila_ultimafe['codigo_factura'])) {
-        $consecutivo = $fila_ultimafe['codigo_factura'];
-    }
-
-    // Asegurar que el consecutivo no sea inferior al inicio autorizado
-    if (isset($rango_fe['InicioFactura']) && $consecutivo < (int)$rango_fe['InicioFactura']) {
-        $consecutivo = (int)$rango_fe['InicioFactura'];
-    }
-
-    @file_put_contents($logFile, "Consecutivo FE usado: $consecutivo (original factura: " . ($row_factura['codigo_factura'] ?? 'NULL') . ")\n", FILE_APPEND);
-}
+@file_put_contents($logFile, "Consecutivo FE usado: $consecutivo (de la factura ID: $idFact)\n", FILE_APPEND);
 
 // VALIDAR RANGO PARA FACTURA ELECTRÓNICA
 if ($row_factura['tipo_factura'] == 2) {
@@ -149,32 +139,89 @@ $iva=0;
 $subtotal=$row_factura['valor_pago'];
 $total=$row_factura['valor_pago'];
 
+$nombreClienteFactura = trim((string)($row_factura['nombre_cliente'] ?? ''));
+$documentoClienteFactura = trim((string)($row_factura['cc_cliente'] ?? ''));
+$clienteGenericoInvalido = false;
+
+if ($documentoClienteFactura === '' || strlen(preg_replace('/\D+/', '', $documentoClienteFactura)) < 5) {
+    $clienteGenericoInvalido = true;
+}
+
+if (preg_match('/cliente\s+estandar|cliente\s+general|consumidor\s+final/i', $nombreClienteFactura)) {
+    $clienteGenericoInvalido = true;
+}
+
+if ($documentoClienteFactura === '12345') {
+    $clienteGenericoInvalido = true;
+}
+
+if ($clienteGenericoInvalido) {
+    http_response_code(400);
+    echo json_encode([
+        "success" => false,
+        "message" => "La factura electrónica no se puede enviar con cliente genérico. Selecciona un cliente real con identificación válida antes de emitir a DIAN.",
+        "step" => "validation_cliente_fe",
+        "cliente" => [
+            "id_cliente" => $row_factura['id_cliente'] ?? null,
+            "documento" => $documentoClienteFactura,
+            "nombre" => $nombreClienteFactura
+        ]
+    ]);
+    exit;
+}
+
 
 $detallesFactura = []; // Array para almacenar los datos procesados
+$productosIndexados = [];
 $itemCounter = 1; // Inicializar el contador de items
  $total_iva_sum = 0;
  $subtotal_sin_iva_sum = 0;
 while ($row_det_factura = mysqli_fetch_array($sql_det_factura)) {
     // Log de cada producto para debug
     error_log("Producto #" . $itemCounter . " - Codigo: " . ($row_det_factura['codigo_producto'] ?? 'NULL') . " - Descripcion: " . ($row_det_factura['descripcion'] ?? 'NULL'));
+
+    $codigoProducto = isset($row_det_factura['codigo_producto']) ? trim((string)$row_det_factura['codigo_producto']) : '';
+    if ($codigoProducto === '' && isset($row_det_factura['id_producto'])) {
+        $codigoProducto = trim((string)$row_det_factura['id_producto']);
+    }
+
+    $descripcionProducto = isset($row_det_factura['descripcion']) ? trim((string)$row_det_factura['descripcion']) : '';
+    if ($descripcionProducto === '' && $codigoProducto !== '') {
+        $descripcionProducto = 'PRODUCTO ' . $codigoProducto;
+    }
+
+    $cantidadLinea = floatval($row_det_factura['cantidadFraccion'] ?? 0);
+    if ($cantidadLinea <= 0) {
+        $cantidadLinea = floatval($row_det_factura['cantidad'] ?? 0);
+    }
+
+    $precioUnitario = floatval($row_det_factura['valor_unidad'] ?? 0);
+    if ($precioUnitario <= 0 && $cantidadLinea > 0) {
+        $precioUnitario = floatval($row_det_factura['total_pago'] ?? 0) / $cantidadLinea;
+    }
+
+    $costoUnitario = floatval($row_det_factura['valor'] ?? 0);
+    if ($costoUnitario <= 0) {
+        $costoUnitario = $precioUnitario;
+    }
     
     // Validar que existan los campos requeridos (permitir "0" como válido)
-    if (!isset($row_det_factura['codigo_producto']) || !isset($row_det_factura['descripcion']) || 
-        $row_det_factura['codigo_producto'] === '' || $row_det_factura['codigo_producto'] === null ||
-        $row_det_factura['descripcion'] === '' || $row_det_factura['descripcion'] === null) {
-        error_log("Producto saltado - codigo: '" . ($row_det_factura['codigo_producto'] ?? 'NULL') . "', descripcion: '" . ($row_det_factura['descripcion'] ?? 'NULL') . "'");
+    if ($codigoProducto === '' || $descripcionProducto === '' || $cantidadLinea <= 0 || $precioUnitario <= 0) {
+        error_log("Producto saltado - codigo: '" . ($row_det_factura['codigo_producto'] ?? 'NULL') . "', descripcion: '" . ($row_det_factura['descripcion'] ?? 'NULL') . "', cantidad: '" . ($row_det_factura['cantidadFraccion'] ?? $row_det_factura['cantidad'] ?? 'NULL') . "', precio: '" . ($row_det_factura['valor_unidad'] ?? 'NULL') . "'");
         continue; // Saltar productos sin datos válidos
     }
     
     // Construir un array para cada fila
     $detalle = [
         "item" => $itemCounter++,
-        "referencia" => $row_det_factura['codigo_producto'],
-        "descripcion" => $row_det_factura['descripcion'],
-        "descrip" => $row_det_factura['descripcion'],
+        "referencia" => $codigoProducto,
+        "codprod" => $codigoProducto,
+        "descripcion" => $descripcionProducto,
+        "descrip" => $descripcionProducto,
         "bodega" => "1",
-        "cantidad" => floatval($row_det_factura['cantidadFraccion'] ?? 0),
-        "precio" => floatval($row_det_factura['valor_unidad'] ?? 0),
+        "cantidad" => $cantidadLinea,
+        "precio" => $precioUnitario,
+        "presentacion" => $row_det_factura['presentacion'] ?? null,
         "descuento" => floatval($row_det_factura['descuento'] ?? 0),
         "iva" => floatval($row_det_factura['iva'] ?? 0),
             "porimptoconsumo" => 0,
@@ -184,7 +231,7 @@ while ($row_det_factura = mysqli_fetch_array($sql_det_factura)) {
             "vlr_iva" => 0,
             "vlr_base_iva" => 0,
             "vlr_desc" => 0,
-            "subtotal" => floatval($row_det_factura['cantidadFraccion'] ?? 0) * floatval($row_det_factura['valor_unidad'] ?? 0),
+            "subtotal" => $cantidadLinea * $precioUnitario,
         // Calculamos el IVA y el subtotal sin IVA suponiendo que el valor unitario incluye IVA
         "iva_porcentaje" => floatval($row_det_factura['iva'] ?? 0),
         "iva_valor" => 0,
@@ -192,13 +239,14 @@ while ($row_det_factura = mysqli_fetch_array($sql_det_factura)) {
         "compañia" =>  "1",
         "concepto" => $prefijo,
         "nrodocumento" => strval($consecutivo),
-        "costo" => 0,
+        "costo" => round($costoUnitario, 2),
         "desadicional" => strval(floatval($row_det_factura['descuento'] ?? 0)),
+        "fecha" => date("Y-m-d"),
         "tercero" => $tercero,
         "cliente" => strval($idtercero)
     ];
     // Calcular IVA por línea y subtotal sin IVA (si el precio ya incluye IVA)
-    $line_subtotal = floatval($row_det_factura['cantidadFraccion'] ?? 0) * floatval($row_det_factura['valor_unidad'] ?? 0);
+    $line_subtotal = $cantidadLinea * $precioUnitario;
     $line_iva_percent = floatval($row_det_factura['iva'] ?? 0);
     if ($line_iva_percent > 0) {
         $line_iva_value = ($line_subtotal * $line_iva_percent) / (100 + $line_iva_percent);
@@ -219,7 +267,16 @@ while ($row_det_factura = mysqli_fetch_array($sql_det_factura)) {
     $total_iva_sum += $line_iva_value;
     $subtotal_sin_iva_sum += $line_net;
 
-    error_log("Detalle agregado para producto: " . $row_det_factura['descripcion']);
+    if (!isset($productosIndexados[$codigoProducto])) {
+        $productosIndexados[$codigoProducto] = [
+            "codigo" => $codigoProducto,
+            "descripcion" => $descripcionProducto,
+            "cantidad" => $cantidadLinea,
+            "precio" => $precioUnitario
+        ];
+    }
+
+    error_log("Detalle agregado para producto: " . $descripcionProducto . " (ref: " . $codigoProducto . ")");
 
     // Agregar al array general
     $detallesFactura[] = $detalle;
@@ -283,51 +340,150 @@ $externalData = [
     "remisiones" => []
 ];
 
+function postJsonFactin($url, $payload)
+{
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 120);
+    curl_setopt($ch, CURLOPT_RESOLVE, ['www.factin.app:8443:159.65.32.58']);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_errno($ch) ? curl_error($ch) : '';
+    curl_close($ch);
+
+    return [
+        'httpCode' => $httpCode,
+        'response' => $response,
+        'curlError' => $curlError
+    ];
+}
+
+function guardarJsonDian($filePath, $data)
+{
+    @file_put_contents(
+        $filePath,
+        json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
+    );
+}
+
+function respuestaTieneErrorCodigoArticulo($responseText)
+{
+    if (!is_string($responseText) || $responseText === '') {
+        return false;
+    }
+    return (bool)preg_match('/c[oó]digo.+art[ií]culo.+vac[ií]o/i', $responseText);
+}
+
+function extraerCodigoArticuloVacio($responseText)
+{
+    if (!is_string($responseText) || $responseText === '') {
+        return '';
+    }
+
+    if (preg_match('/c[oó]digo\s+del\s+art[ií]culo\s+est[aá]\s+vac[ií]o:\s*([^\s\\"\n\r]+)/iu', $responseText, $m)) {
+        return trim((string)$m[1]);
+    }
+
+    if (preg_match('/art[ií]culo.+vac[ií]o:\s*([^\s\\"\n\r]+)/iu', $responseText, $m)) {
+        return trim((string)$m[1]);
+    }
+
+    return '';
+}
+
+function sincronizarArticuloFactin($llave, $codigo, $nombre, $logFile)
+{
+    $codigo = trim((string)$codigo);
+    $nombre = trim((string)$nombre);
+    if ($codigo === '' || $nombre === '') {
+        return false;
+    }
+
+    $payloadArticulo = [
+        'codigo' => $codigo,
+        'nombre' => $nombre,
+        'inarticulosbodega' => [],
+        'inarticuloslistaprecio' => [],
+        'inarticuloscompuesto' => [],
+        'inarticulosstock' => []
+    ];
+
+    $urls = [
+        'https://www.factin.app:8443/Inarticulosapi?llave=' . rawurlencode($llave),
+        'http://159.65.32.58:5041/Inarticulosapi?llave=' . rawurlencode($llave)
+    ];
+
+    foreach ($urls as $urlArticulo) {
+        $res = postJsonFactin($urlArticulo, $payloadArticulo);
+        @file_put_contents($logFile, "Sync articulo [$codigo] URL: $urlArticulo HTTP: " . $res['httpCode'] . "\n", FILE_APPEND);
+
+        if ($res['curlError'] === '' && in_array((int)$res['httpCode'], [200, 201, 204])) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Log de datos enviados para debug
 error_log("=== DATOS ENVIADOS A FACTIN ===");
 error_log("URL: " . $externalUrl);
 error_log("Cantidad de productos: " . count($detallesFactura));
 error_log("Datos JSON: " . json_encode($externalData, JSON_PRETTY_PRINT));
 
-// Inicializar cURL
-$ch = curl_init($externalUrl);
+// Ejecutar primer intento de guardado de movimiento
+$movRes = postJsonFactin($externalUrl, $externalData);
+$response = $movRes['response'];
+$httpCode = (int)$movRes['httpCode'];
 
-// Configurar la solicitud cURL
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Obtener respuesta como string
-curl_setopt($ch, CURLOPT_POST, true); // Método POST
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']); // Cabecera Content-Type
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($externalData)); // Enviar el cuerpo en formato JSON
-
-// Configuraciones adicionales para resolver problemas de DNS y SSL
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Deshabilitar verificación SSL (solo desarrollo)
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // Deshabilitar verificación de host SSL
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Seguir redirecciones
-curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Timeout de 30 segundos
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Timeout de conexión de 10 segundos
-curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 120); // Cache DNS por 2 minutos
-// Forzar resolución DNS usando la IP si es necesario
-curl_setopt($ch, CURLOPT_RESOLVE, ['www.factin.app:5091:159.65.32.58']);
-
-// Ejecutar la solicitud
-$response = curl_exec($ch);
-
-// Verificar si ocurrió un error
-if (curl_errno($ch)) {
+// Verificar si ocurrió un error de conexión
+if ($movRes['curlError'] !== '') {
     // Si hubo un error, devolverlo como respuesta
     http_response_code(500);
     echo json_encode([
         "success" => false,
-        "message" => "Error al conectar con el servidor de facturación: " . curl_error($ch), 
+        "message" => "Error al conectar con el servidor de facturación: " . $movRes['curlError'], 
         "idFactura" => isset($data['idFact']) ? $data['idFact'] : 'No disponible',
-        "error" => curl_error($ch),
+        "error" => $movRes['curlError'],
         "step" => "movimientoapi_connection"
     ]);
-    curl_close($ch);
     exit;
 }
 
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+// Si hubo error de código de artículo, sincronizar artículos y reintentar una vez
+if ($httpCode >= 400 && respuestaTieneErrorCodigoArticulo((string)$response)) {
+    @file_put_contents($logFile, "Detectado error de código de artículo. Iniciando sincronización de artículos y reintento...\n", FILE_APPEND);
+
+    $codigoConProblema = extraerCodigoArticuloVacio((string)$response);
+    if ($codigoConProblema !== '') {
+        $productoDetectado = $productosIndexados[$codigoConProblema] ?? null;
+        @file_put_contents(
+            $logFile,
+            "Código con problema detectado por Factin: $codigoConProblema | Producto: " . json_encode($productoDetectado, JSON_UNESCAPED_UNICODE) . "\n",
+            FILE_APPEND
+        );
+    }
+
+    foreach ($detallesFactura as $detalleSync) {
+        sincronizarArticuloFactin($llave, $detalleSync['referencia'] ?? '', $detalleSync['descrip'] ?? '', $logFile);
+    }
+
+    $movResRetry = postJsonFactin($externalUrl, $externalData);
+    if ($movResRetry['curlError'] === '') {
+        $response = $movResRetry['response'];
+        $httpCode = (int)$movResRetry['httpCode'];
+        @file_put_contents($logFile, "Reintento Movimientoapi HTTP: $httpCode\n", FILE_APPEND);
+    }
+}
 
 // Log para debug - quitar después
 error_log("HTTP Code del primer API: " . $httpCode);
@@ -337,6 +493,8 @@ error_log("Respuesta del primer API: " . $response);
 if ($httpCode === 200) {
     // Decodificar respuesta del primer API
     $firstApiResponse = json_decode($response, true);
+    $firstApiCodigo = isset($firstApiResponse['codigo']) ? (string)$firstApiResponse['codigo'] : '';
+    $firstApiMovimiento = $firstApiResponse['movimiento'] ?? null;
     error_log("Respuesta decodificada: " . print_r($firstApiResponse, true));
     
     // Asegúrate de que $prefijo y $consecutivo están definidos
@@ -350,8 +508,66 @@ if ($httpCode === 200) {
         exit;
     }
 
+    // Validar configuración mínima de envío DIAN
+    if ($nitDian === '' || $claveCertificadoDian === '' || $softwareIdDian === '' || $llave === '') {
+        http_response_code(500);
+        echo json_encode([
+            "success" => false,
+            "message" => "Configuración incompleta para envío DIAN. Verifica NIT, clave certificado, software ID y llave.",
+            "step" => "envio_dian_config",
+            "config" => [
+                "nit" => $nitDian !== '' ? "OK" : "FALTA",
+                "clave_certificado" => $claveCertificadoDian !== '' ? "OK" : "FALTA",
+                "software_id" => $softwareIdDian !== '' ? "OK" : "FALTA",
+                "llave" => $llave !== '' ? "OK" : "FALTA"
+            ]
+        ]);
+        exit;
+    }
+
     // Construir la URL del servicio externo
-    $externalUrldian = "https://www.factin.app:5091/EnvioApi/" . $prefijo . "/" . $consecutivo . "/73148319/BENIGNO2025/233b2627-adae-430e-9f8c-7f11f7582f95?llave=EDVOAZXWJZMKBXMVVIBZCLXC73148319TQRIAQAAFJGRSGYGJRMJLSMWGAFROSWLYL";
+    // IMPORTANTE: usar $llave (misma que Movimientoapi) para que el servidor encuentre el movimiento guardado
+    $externalUrldian = "https://www.factin.app:8443/EnvioApi/"
+        . rawurlencode($prefijo) . "/"
+        . rawurlencode((string)$consecutivo) . "/"
+        . rawurlencode($nitDian) . "/"
+        . rawurlencode($claveCertificadoDian) . "/"
+        . rawurlencode($softwareIdDian)
+        . "?llave=" . rawurlencode($llave);
+
+    $payloadEnviado = $externalData;
+    @file_put_contents($logFile, "URL EnvioApi real: $externalUrldian\n", FILE_APPEND);
+    $dianRequestDebug = [
+        "endpoint" => $externalUrldian,
+        "prefijo" => $prefijo,
+        "consecutivo" => (string)$consecutivo,
+        "nit" => $nitDian,
+        "softwareId" => $softwareIdDian,
+        "llaveEnvioMasked" => $llave !== ''
+            ? str_repeat('*', max(0, strlen($llave) - 4)) . substr($llave, -4)
+            : '',
+        "claveCertificadoMasked" => $claveCertificadoDian !== ''
+            ? str_repeat('*', max(0, strlen($claveCertificadoDian) - 4)) . substr($claveCertificadoDian, -4)
+            : ''
+    ];
+
+    $traceSafeId = preg_replace('/[^A-Za-z0-9_-]/', '_', (string)$prefijo . '_' . (string)$consecutivo . '_' . (string)$idFact);
+    $dianTraceFile = '/tmp/dian_exchange_' . $traceSafeId . '.json';
+    $dianTrace = [
+        "fecha" => date('c'),
+        "idFactura" => (string)$idFact,
+        "prefijo" => (string)$prefijo,
+        "consecutivo" => (string)$consecutivo,
+        "enviado" => [
+            "payload" => $payloadEnviado,
+            "solicitudDian" => $dianRequestDebug
+        ],
+        "recibido" => [
+            "intentos" => []
+        ]
+    ];
+    guardarJsonDian($dianTraceFile, $dianTrace);
+    @file_put_contents($logFile, "Trace DIAN JSON: $dianTraceFile\n", FILE_APPEND);
 
     // Ejecutar la solicitud a la DIAN con reintentos (exponential backoff)
     $maxAttempts = 3;
@@ -359,6 +575,8 @@ if ($httpCode === 200) {
     $response = false;
     $httpCodeDian = 0;
     $lastCurlError = '';
+    $ultimoCodigoDian = '';
+    $ultimoMensajeDian = '';
     while ($attempt < $maxAttempts) {
         $attempt++;
         error_log("Intento envío DIAN #" . $attempt);
@@ -371,12 +589,28 @@ if ($httpCode === 200) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_RESOLVE, ['www.factin.app:5091:159.65.32.58']);
+        curl_setopt($ch, CURLOPT_RESOLVE, ['www.factin.app:8443:159.65.32.58']);
 
         $response = curl_exec($ch);
         $httpCodeDian = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlErrNo = curl_errno($ch);
         $curlErr = $curlErrNo ? curl_error($ch) : '';
+
+        $decodedAttempt = json_decode((string)$response, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $decodedAttempt = null;
+        }
+        $dianTrace['recibido']['intentos'][] = [
+            "intento" => $attempt,
+            "httpCode" => (int)$httpCodeDian,
+            "curlError" => $curlErr,
+            "rawResponse" => $response,
+            "responseJson" => $decodedAttempt
+        ];
+        guardarJsonDian($dianTraceFile, $dianTrace);
+
+        error_log("Respuesta DIAN intento $attempt HTTP $httpCodeDian: " . ($response === false ? '[false]' : $response));
+        @file_put_contents($logFile, "Respuesta DIAN intento $attempt HTTP $httpCodeDian: " . ($response === false ? '[false]' : $response) . "\n", FILE_APPEND);
         if ($curlErrNo) {
             $lastCurlError = $curlErr;
             error_log("cURL error intento $attempt: $curlErr");
@@ -386,19 +620,46 @@ if ($httpCode === 200) {
                 sleep(pow(2, $attempt)); // backoff
                 continue;
             } else {
+                $dianTrace['resultado'] = [
+                    "estado" => "error_conexion",
+                    "step" => "envio_dian_connection",
+                    "httpCode" => (int)$httpCodeDian,
+                    "mensaje" => $lastCurlError
+                ];
+                guardarJsonDian($dianTraceFile, $dianTrace);
                 http_response_code(500);
                 echo json_encode([
                     "success" => false,
                     "message" => "Error al enviar a la DIAN: " . $lastCurlError,
                     "curl_error" => $lastCurlError,
-                    "step" => "envio_dian_connection"
+                    "step" => "envio_dian_connection",
+                    "enviado" => $dianTrace['enviado'],
+                    "recibido" => $dianTrace['recibido'],
+                    "traceFile" => $dianTraceFile
                 ]);
                 exit;
             }
         }
 
-        // Si recibimos 200/201/204 consideramos éxito
+        // Si recibimos 200/201/204 validamos también el código de negocio de DIAN
         if (in_array($httpCodeDian, [200, 201, 204])) {
+            $codigoIntento = is_array($decodedAttempt) && isset($decodedAttempt['codigo'])
+                ? (string)$decodedAttempt['codigo']
+                : '';
+            $mensajeIntento = is_array($decodedAttempt) ? trim((string)($decodedAttempt['mensaje'] ?? '')) : '';
+
+            if ($codigoIntento !== '' && !in_array($codigoIntento, ['200', '201', '204'])) {
+                $ultimoCodigoDian = $codigoIntento;
+                $ultimoMensajeDian = $mensajeIntento;
+                error_log("DIAN rechazo de negocio en intento $attempt. codigo=$codigoIntento mensaje=$mensajeIntento");
+                @file_put_contents($logFile, "DIAN rechazo de negocio en intento $attempt. codigo=$codigoIntento mensaje=$mensajeIntento\n", FILE_APPEND);
+                curl_close($ch);
+                if ($attempt < $maxAttempts) {
+                    sleep(pow(2, $attempt));
+                    continue;
+                }
+            }
+
             break;
         }
 
@@ -412,39 +673,180 @@ if ($httpCode === 200) {
         }
     }
 
+    if (!in_array($httpCodeDian, [200, 201, 204])) {
+        $dianTrace['resultado'] = [
+            "estado" => "error_http",
+            "step" => "envio_dian_failed",
+            "httpCode" => (int)$httpCodeDian,
+            "mensaje" => "Error al enviar a la DIAN"
+        ];
+        guardarJsonDian($dianTraceFile, $dianTrace);
+        http_response_code($httpCodeDian > 0 ? $httpCodeDian : 500);
+        echo json_encode([
+            "success" => false,
+            "message" => "Error al enviar a la DIAN",
+            "step" => "envio_dian_failed",
+            "httpCode" => $httpCodeDian,
+            "enviado" => $dianTrace['enviado'],
+            "recibido" => $dianTrace['recibido'],
+            "traceFile" => $dianTraceFile
+        ]);
+        if (isset($ch) && is_resource($ch)) {
+            curl_close($ch);
+        }
+        exit;
+    }
+
     
     // Procesar la respuesta del servidor
     if ($response === false || empty($response)) {
+        $dianTrace['resultado'] = [
+            "estado" => "respuesta_vacia",
+            "step" => "envio_dian_empty_response",
+            "httpCode" => (int)$httpCodeDian,
+            "mensaje" => "Respuesta vacía del servidor DIAN"
+        ];
+        guardarJsonDian($dianTraceFile, $dianTrace);
         http_response_code(500);
         echo json_encode([
             "success" => false,
             "message" => "Respuesta vacía del servidor DIAN",
             "step" => "envio_dian_empty_response",
-            "httpCode" => $httpCodeDian
+            "httpCode" => $httpCodeDian,
+            "enviado" => $dianTrace['enviado'],
+            "recibido" => $dianTrace['recibido'],
+            "traceFile" => $dianTraceFile
         ]);
     } else {
         // Intentar decodificar la respuesta como JSON
         $responseData = json_decode($response, true);
         
         if (json_last_error() === JSON_ERROR_NONE) {
+            $codigoRespuestaDian = isset($responseData['codigo']) ? (string)$responseData['codigo'] : '';
+            $mensajeRespuestaDian = trim((string)($responseData['mensaje'] ?? ''));
+            $movimientoDian = $responseData['movimiento']['faencmovi'] ?? null;
+            $cufeDian = is_array($movimientoDian) ? trim((string)($movimientoDian['cufe'] ?? '')) : '';
+            $qrDian = is_array($movimientoDian) ? trim((string)($movimientoDian['qr'] ?? '')) : '';
+
+            if ($codigoRespuestaDian !== '' && !in_array($codigoRespuestaDian, ['200', '201', '204'])) {
+                if ($mensajeRespuestaDian === '' && $ultimoMensajeDian !== '') {
+                    $mensajeRespuestaDian = $ultimoMensajeDian;
+                }
+                if ($mensajeRespuestaDian === '') {
+                    $mensajeRespuestaDian = "DIAN/Factin devolvió código " . $codigoRespuestaDian . " sin mensaje.";
+                }
+
+                $diagnosticoDian = [
+                    "codigo_dian" => $codigoRespuestaDian,
+                    "mensaje_dian" => $mensajeRespuestaDian,
+                    "intentos" => $attempt,
+                    "movimientoapi_codigo" => $firstApiCodigo,
+                    "movimientoapi_tiene_movimiento" => is_array($firstApiMovimiento),
+                    "prefijo" => $prefijo,
+                    "consecutivo" => (string)$consecutivo,
+                    "nit" => $nitDian,
+                    "sugerencia" => "Verifica que el consecutivo exista en Factin y que NIT/SoftwareID/Clave/llave correspondan al mismo ambiente."
+                ];
+
+                $dianTrace['resultado'] = [
+                    "estado" => "rechazado",
+                    "step" => "envio_dian_rejected",
+                    "httpCode" => (int)$httpCodeDian,
+                    "codigo" => $codigoRespuestaDian,
+                    "mensaje" => $mensajeRespuestaDian
+                ];
+                guardarJsonDian($dianTraceFile, $dianTrace);
+                http_response_code(500);
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Error al enviar a la DIAN: " . $mensajeRespuestaDian,
+                    "step" => "envio_dian_rejected",
+                    "httpCode" => $httpCodeDian,
+                    "codigoDian" => $codigoRespuestaDian,
+                    "diagnostico" => $diagnosticoDian,
+                    "enviado" => $dianTrace['enviado'],
+                    "recibido" => [
+                        "intentos" => $dianTrace['recibido']['intentos'],
+                        "respuestaFinalRaw" => $response,
+                        "respuestaFinalJson" => $responseData
+                    ],
+                    "traceFile" => $dianTraceFile,
+                    "fullResponse" => $responseData
+                ]);
+                if (isset($ch) && is_resource($ch)) {
+                    curl_close($ch);
+                }
+                exit;
+            }
+
+            if ($cufeDian === '' && $qrDian === '') {
+                $dianTrace['resultado'] = [
+                    "estado" => "sin_cufe_qr",
+                    "step" => "envio_dian_without_cufe",
+                    "httpCode" => (int)$httpCodeDian,
+                    "mensaje" => "La DIAN respondió sin CUFE ni QR"
+                ];
+                guardarJsonDian($dianTraceFile, $dianTrace);
+                http_response_code(500);
+                echo json_encode([
+                    "success" => false,
+                    "message" => "La DIAN respondió sin CUFE ni QR",
+                    "step" => "envio_dian_without_cufe",
+                    "httpCode" => $httpCodeDian,
+                    "enviado" => $dianTrace['enviado'],
+                    "recibido" => [
+                        "intentos" => $dianTrace['recibido']['intentos'],
+                        "respuestaFinalRaw" => $response,
+                        "respuestaFinalJson" => $responseData
+                    ],
+                    "traceFile" => $dianTraceFile,
+                    "fullResponse" => $responseData
+                ]);
+                if (isset($ch) && is_resource($ch)) {
+                    curl_close($ch);
+                }
+                exit;
+            }
+
             // Si es JSON válido, agregar indicador de éxito
+            $dianTrace['resultado'] = [
+                "estado" => "ok",
+                "step" => "envio_dian_ok",
+                "httpCode" => (int)$httpCodeDian,
+                "mensaje" => "Factura electrónica creada exitosamente"
+            ];
+            $dianTrace['recibido']['respuestaFinalRaw'] = $response;
+            $dianTrace['recibido']['respuestaFinalJson'] = $responseData;
+            guardarJsonDian($dianTraceFile, $dianTrace);
+
             http_response_code(200);
             echo json_encode([
                 "success" => true,
                 "message" => "Factura electrónica creada exitosamente",
                 "idFactura" => $consecutivo,
                 "prefijo" => $prefijo,
-                "data" => $responseData
+                "data" => $responseData,
+                "traceFile" => $dianTraceFile
             ]);
         } else {
             // Si no es JSON, devolver como texto
+            $dianTrace['resultado'] = [
+                "estado" => "ok_raw",
+                "step" => "envio_dian_ok_raw",
+                "httpCode" => (int)$httpCodeDian,
+                "mensaje" => "Factura electrónica creada exitosamente (respuesta no JSON)"
+            ];
+            $dianTrace['recibido']['respuestaFinalRaw'] = $response;
+            guardarJsonDian($dianTraceFile, $dianTrace);
+
             http_response_code(200);
             echo json_encode([
                 "success" => true,
                 "message" => "Factura electrónica creada exitosamente",
                 "idFactura" => $consecutivo,
                 "prefijo" => $prefijo,
-                "response" => $response
+                "response" => $response,
+                "traceFile" => $dianTraceFile
             ]);
         }
     }
@@ -479,6 +881,15 @@ if ($httpCode === 200) {
     } else if (!empty($response)) {
         $errorMsg = substr($response, 0, 500); // Primeros 500 caracteres de la respuesta
     }
+
+    $codigoArticuloProblema = extraerCodigoArticuloVacio((string)$response);
+    $productoProblema = null;
+    if ($codigoArticuloProblema !== '') {
+        $productoProblema = $productosIndexados[$codigoArticuloProblema] ?? [
+            "codigo" => $codigoArticuloProblema,
+            "descripcion" => null
+        ];
+    }
     
     echo json_encode([
         "success" => false,
@@ -486,6 +897,8 @@ if ($httpCode === 200) {
         "httpCode" => $httpCode,
         "step" => "movimientoapi_failed",
         "errorDetails" => $errorDetails,
-        "fullResponse" => $errorResponse ?? $response
+        "fullResponse" => $errorResponse ?? $response,
+        "codigoArticuloProblema" => $codigoArticuloProblema,
+        "productoProblema" => $productoProblema
     ]);
 }
